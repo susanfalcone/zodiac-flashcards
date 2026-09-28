@@ -34,15 +34,12 @@
 }
 
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--fg);font-family:var(--font-body);padding-inline:16px;padding-block:24px}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);padding-inline:16px;padding-block:12px}
 h1,h2,h3{font-family:var(--font-display);font-weight:600;text-wrap:balance;margin:0}
 
-.wrap{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+.wrap{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
 
-header.page{display:flex;flex-direction:column;gap:4px;text-align:center}
-header.page h1{font-size:clamp(1.5rem,4vw,2rem)}
-header.page p{margin:0;color:var(--fg-dim);font-size:.9rem}
-header.page .src{font-size:.78rem;color:var(--fg-dim);font-style:italic}
+.src{margin:0;text-align:center;font-size:.78rem;color:var(--fg-dim);font-style:italic}
 
 /* glyph rail */
 .rail{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:14px}
@@ -128,14 +125,6 @@ header.page .src{font-size:.78rem;color:var(--fg-dim);font-style:italic}
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 
 <div class="wrap">
-  <header class="page">
-    <h1>Zodiac Study Cards</h1>
-    <p>Tap a card to flip it. Use the wheel above to jump signs, or the arrows to step through.</p>
-    <p class="src">Sources: <em>The Only Astrology Book You'll Ever Need</em> (Woolfolk) &amp; Debra Silverman's Level 1 coursebook</p>
-  </header>
-
-  <nav class="rail" id="rail" aria-label="Jump to sign"></nav>
-
   <div class="card-outer">
     <div class="card" id="card" tabindex="0" role="button" aria-label="Flip card">
       <div class="face front" id="front"></div>
@@ -148,6 +137,10 @@ header.page .src{font-size:.78rem;color:var(--fg-dim);font-style:italic}
     <div class="counter" id="counter"></div>
     <button class="navbtn" id="nextBtn" aria-label="Next sign">Next <span class="arrow">&#8594;</span></button>
   </div>
+
+  <nav class="rail" id="rail" aria-label="Jump to sign"></nav>
+
+  <p class="src">Sources: <em>The Only Astrology Book You'll Ever Need</em> (Woolfolk) &amp; Debra Silverman's Level 1 coursebook</p>
 </div>
 
 <script>
