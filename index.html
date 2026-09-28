@@ -249,7 +249,7 @@ const counterEl = document.getElementById('counter');
 
 SIGNS.forEach((s,i)=>{
   const b = document.createElement('button');
-  b.textContent = s.glyph;
+  b.textContent = s.glyph + '︎';
   b.style.setProperty('--elcolor', ELCOLOR[s.element]);
   b.title = s.name;
   b.addEventListener('click', ()=>{ idx=i; flipped=false; render(); });
@@ -268,7 +268,7 @@ function render(){
 
   frontEl.innerHTML = `
     <div class="housenum">${parseInt(s.house, 10)}</div>
-    <div class="glyph">${s.glyph}</div>
+    <div class="glyph">${s.glyph}︎</div>
     <h2>${s.name}</h2>
     <div class="dates">${s.dates}</div>
     <div class="tagline">${s.tagline}</div>
@@ -277,7 +277,7 @@ function render(){
 
   backEl.innerHTML = `
     <div class="bhead">
-      <span class="g">${s.glyph}</span>
+      <span class="g">${s.glyph}︎</span>
       <h3>${s.name}</h3>
       <span class="em">${s.element} · ${s.mode}</span>
     </div>
@@ -285,7 +285,7 @@ function render(){
     <p class="label">Correspondences</p>
     <div class="facts">
       <div class="k">Symbol</div><div class="v">${s.symbol}</div>
-      <div class="k">Ruling planet</div><div class="v">${s.rulerGlyph} ${s.ruler}</div>
+      <div class="k">Ruling planet</div><div class="v">${s.rulerGlyph}︎ ${s.ruler}</div>
       <div class="k">Natural house</div><div class="v">${s.house}</div>
       <div class="k">Duality</div><div class="v">${s.duality}</div>
       <div class="k">Polarity</div><div class="v">${s.polarity}</div>
