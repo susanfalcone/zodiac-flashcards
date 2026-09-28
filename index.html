@@ -45,11 +45,11 @@ h1,h2,h3{font-family:var(--font-display);font-weight:600;text-wrap:balance;margi
 .rail{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:14px}
 .rail button{
   width:44px;height:44px;border-radius:50%;border:1.5px solid var(--border);background:var(--surface-2);
-  color:var(--fg);font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  color:var(--elcolor,var(--fg));font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
   transition:transform .15s ease, border-color .15s ease, background .15s ease;
 }
 .rail button:hover{transform:translateY(-2px)}
-.rail button[aria-current="true"]{border-color:var(--elcolor,var(--gold));background:color-mix(in srgb, var(--elcolor,var(--gold)) 18%, var(--surface));color:var(--elcolor,var(--gold));font-weight:700}
+.rail button[aria-current="true"]{border-color:var(--elcolor,var(--gold));background:color-mix(in srgb, var(--elcolor,var(--gold)) 18%, var(--surface));font-weight:700}
 .rail button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 
 /* card */
@@ -89,6 +89,12 @@ h1,h2,h3{font-family:var(--font-display);font-weight:600;text-wrap:balance;margi
 .front .dates{font-family:var(--font-mono);color:var(--fg-dim);font-size:.95rem;letter-spacing:.02em}
 .front .tagline{max-width:32ch;color:var(--fg-dim);font-size:.95rem;font-style:italic}
 .front .hint{position:absolute;bottom:14px;font-size:.72rem;color:var(--fg-dim);letter-spacing:.06em;text-transform:uppercase}
+.front .housenum{
+  width:32px;height:32px;border-radius:50%;
+  border:1.5px solid var(--elcolor);color:var(--elcolor);background:var(--surface);
+  font-family:var(--font-mono);font-weight:700;font-size:.92rem;
+  display:flex;align-items:center;justify-content:center;
+}
 
 /* back face */
 .back{padding:18px 18px 22px}
@@ -261,6 +267,7 @@ function render(){
   cardEl.classList.toggle('flipped', flipped);
 
   frontEl.innerHTML = `
+    <div class="housenum">${parseInt(s.house, 10)}</div>
     <div class="glyph">${s.glyph}</div>
     <h2>${s.name}</h2>
     <div class="dates">${s.dates}</div>
