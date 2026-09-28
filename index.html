@@ -1,0 +1,333 @@
+<title>Zodiac Study Cards</title>
+<style>
+/* Layout: single flip-card "study deck" — glyph rail for navigation above, prev/next below, deep celestial neutrals with 4 elemental accent hues */
+:root{
+  --bg:#f3f4f7; --surface:#ffffff; --surface-2:#eceef3; --fg:#191b26; --fg-dim:#565a6e; --border:#d6d9e2;
+  --gold:#a3812f;
+  --fire:#c8461b; --earth:#5b7a3f; --air:#b8901f; --water:#1f7a8c;
+  --good:#2f7d4f; --bad:#b0432c;
+  --font-display:'Fraunces',Georgia,serif; --font-body:'IBM Plex Sans',system-ui,sans-serif; --font-mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#12131d; --surface:#1b1d2a; --surface-2:#242739; --fg:#e9e9f2; --fg-dim:#a3a6ba; --border:#33364a;
+    --gold:#d4b463;
+    --fire:#e2703f; --earth:#8bad63; --air:#e0b944; --water:#4fb3c4;
+    --good:#5cb87f; --bad:#e07a5f;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#12131d; --surface:#1b1d2a; --surface-2:#242739; --fg:#e9e9f2; --fg-dim:#a3a6ba; --border:#33364a;
+  --gold:#d4b463;
+  --fire:#e2703f; --earth:#8bad63; --air:#e0b944; --water:#4fb3c4;
+  --good:#5cb87f; --bad:#e07a5f;
+  color-scheme: dark;
+}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);padding-inline:16px;padding-block:24px}
+h1,h2,h3{font-family:var(--font-display);font-weight:600;text-wrap:balance;margin:0}
+
+.wrap{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+
+header.page{display:flex;flex-direction:column;gap:4px;text-align:center}
+header.page h1{font-size:clamp(1.5rem,4vw,2rem)}
+header.page p{margin:0;color:var(--fg-dim);font-size:.9rem}
+header.page .src{font-size:.78rem;color:var(--fg-dim);font-style:italic}
+
+/* glyph rail */
+.rail{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:14px}
+.rail button{
+  width:38px;height:38px;border-radius:50%;border:1.5px solid var(--border);background:var(--surface-2);
+  color:var(--fg);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:transform .15s ease, border-color .15s ease, background .15s ease;
+}
+.rail button:hover{transform:translateY(-2px)}
+.rail button[aria-current="true"]{border-color:var(--elcolor,var(--gold));background:color-mix(in srgb, var(--elcolor,var(--gold)) 18%, var(--surface));color:var(--elcolor,var(--gold));font-weight:700}
+.rail button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+/* card */
+.stage{display:flex;align-items:center;gap:10px}
+.navbtn{
+  flex:0 0 auto;width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--surface);
+  color:var(--fg);font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+}
+.navbtn:hover{background:var(--surface-2)}
+.navbtn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+.card-outer{flex:1;min-width:0;perspective:1600px}
+.card{
+  position:relative;height:440px;border-radius:20px;cursor:pointer;
+  transform-style:preserve-3d;transition:transform .55s cubic-bezier(.2,.8,.2,1), height .25s ease;
+}
+.card.flipped{transform:rotateY(180deg)}
+.face{
+  position:absolute;inset:0;backface-visibility:hidden;border-radius:20px;border:1px solid var(--border);
+  background:var(--surface);display:flex;flex-direction:column;overflow:hidden;
+}
+.face.back{transform:rotateY(180deg);overflow-y:auto}
+
+/* front face */
+.front{align-items:center;justify-content:center;text-align:center;gap:10px;padding:24px;
+  background:
+    radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--elcolor) 16%, transparent), transparent 60%),
+    var(--surface);
+}
+.front .glyph{font-size:clamp(4.5rem,18vw,6rem);color:var(--elcolor);line-height:1}
+.front h2{font-size:clamp(1.8rem,6vw,2.4rem);color:var(--fg)}
+.front .dates{font-family:var(--font-mono);color:var(--fg-dim);font-size:.95rem;letter-spacing:.02em}
+.front .tagline{max-width:32ch;color:var(--fg-dim);font-size:.95rem;font-style:italic}
+.front .hint{position:absolute;bottom:14px;font-size:.72rem;color:var(--fg-dim);letter-spacing:.06em;text-transform:uppercase}
+
+/* back face */
+.back{padding:18px 18px 22px}
+.back .bhead{display:flex;align-items:baseline;gap:10px;padding-bottom:10px;border-bottom:2px solid var(--elcolor);margin-bottom:12px}
+.back .bhead .g{font-size:1.6rem;color:var(--elcolor)}
+.back .bhead h3{font-size:1.3rem}
+.back .bhead .em{margin-left:auto;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--elcolor);font-weight:700}
+
+.label{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--fg-dim);font-weight:600;margin:0 0 6px}
+
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;font-size:.86rem;margin-bottom:14px}
+.facts div.k{color:var(--fg-dim)}
+.facts div.v{font-family:var(--font-mono);text-align:right}
+.facts .row{display:contents}
+
+.qual-block{margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{font-size:.74rem;padding:3px 9px;border-radius:999px;background:var(--surface-2);border:1px solid var(--border);color:var(--fg)}
+.chip.tag{border-color:var(--elcolor);color:var(--elcolor)}
+
+.ev-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:6px}
+@media(min-width:460px){.ev-grid{grid-template-columns:1fr 1fr}}
+.ev-col{border-radius:10px;padding:10px 12px;background:var(--surface-2)}
+.ev-col.good{border-left:3px solid var(--good)}
+.ev-col.bad{border-left:3px solid var(--bad)}
+.ev-col .t{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:6px}
+.ev-col.good .t{color:var(--good)}
+.ev-col.bad .t{color:var(--bad)}
+.ev-col ul{margin:0;padding-left:1.1em;font-size:.82rem;line-height:1.5}
+.ev-col li{margin-bottom:3px}
+
+footer.page{text-align:center;font-size:.75rem;color:var(--fg-dim);padding-top:6px}
+footer.page a{color:var(--fg-dim)}
+
+@media (prefers-reduced-motion: reduce){ .card{transition:none} .rail button{transition:none} }
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<div class="wrap">
+  <header class="page">
+    <h1>Zodiac Study Cards</h1>
+    <p>Tap a card to flip it. Use the wheel above to jump signs, or the arrows to step through.</p>
+    <p class="src">Sources: <em>The Only Astrology Book You'll Ever Need</em> (Woolfolk) &amp; Debra Silverman's Level 1 coursebook</p>
+  </header>
+
+  <nav class="rail" id="rail" aria-label="Jump to sign"></nav>
+
+  <div class="stage">
+    <button class="navbtn" id="prevBtn" aria-label="Previous sign">&#8592;</button>
+    <div class="card-outer">
+      <div class="card" id="card" tabindex="0" role="button" aria-label="Flip card">
+        <div class="face front" id="front"></div>
+        <div class="face back" id="back"></div>
+      </div>
+    </div>
+    <button class="navbtn" id="nextBtn" aria-label="Next sign">&#8594;</button>
+  </div>
+
+  <footer class="page" id="counter"></footer>
+</div>
+
+<script>
+const SIGNS = [
+{name:"Aries",glyph:"♈",symbol:"The Ram",element:"Fire",mode:"Cardinal",ruler:"Mars",rulerGlyph:"♂",house:"1st House",duality:"Masculine",polarity:"Libra",body:"Head, face",dates:"Mar 21 – Apr 19",
+  tagline:"Initiates. Acts before it thinks things through.",
+  signQ:["Initiating","Direct","Competitive","Impulsive","Courageous"],
+  houseQ:["Identity","Self-image","First impressions","Initiative"],
+  planetQ:["Drive","Action","Desire","Assertion"],
+  evolved:["Leads with courage, not force","Acts fast without needing to fight","Turns anger into clean, direct honesty","Inspires others to move"],
+  unevolved:["Impulsive to the point of reckless","Picks fights to feel alive","Starts more than it finishes","Turns everything into a competition"]},
+{name:"Taurus",glyph:"♉",symbol:"The Bull",element:"Earth",mode:"Fixed",ruler:"Venus",rulerGlyph:"♀",house:"2nd House",duality:"Feminine",polarity:"Scorpio",body:"Neck, throat",dates:"Apr 20 – May 20",
+  tagline:"Builds. Moves slowly and holds its ground.",
+  signQ:["Steady","Sensual","Patient","Possessive","Grounded"],
+  houseQ:["Money","Possessions","Self-worth","Values"],
+  planetQ:["Love","Values","Pleasure","Attraction"],
+  evolved:["Builds lasting security, patiently","Enjoys pleasure without guilt","A steady presence others lean on","Loves itself exactly as it is"],
+  unevolved:["Stubborn to the point of immovable","Possessive of people and things","Measures worth by what it owns","Resists change even when it helps"]},
+{name:"Gemini",glyph:"♊",symbol:"The Twins",element:"Air",mode:"Mutable",ruler:"Mercury",rulerGlyph:"☿",house:"3rd House",duality:"Masculine",polarity:"Sagittarius",body:"Hands, arms, lungs",dates:"May 21 – Jun 20",
+  tagline:"Connects. Gathers information, talks it through.",
+  signQ:["Curious","Talkative","Adaptable","Witty","Scattered"],
+  houseQ:["Communication","Siblings","Local environment","Learning"],
+  planetQ:["Communication","Thinking","Learning","Exchange"],
+  evolved:["Connects ideas and people with ease","Genuinely curious, genuinely listens","Adapts without losing the thread","Makes complex things simple"],
+  unevolved:["Scattered, starts everything, finishes little","Talks past people instead of with them","Says what's easy, not what's true","Flighty when things get serious"]},
+{name:"Cancer",glyph:"♋",symbol:"The Crab",element:"Water",mode:"Cardinal",ruler:"Moon",rulerGlyph:"☽",house:"4th House",duality:"Feminine",polarity:"Capricorn",body:"Chest, stomach",dates:"Jun 21 – Jul 22",
+  tagline:"Protects. Feels first, decides from there.",
+  signQ:["Nurturing","Protective","Moody","Intuitive","Loyal"],
+  houseQ:["Home","Family","Roots","Emotional foundation"],
+  planetQ:["Emotion","Instinct","Comfort","Memory"],
+  evolved:["Creates real emotional safety","Nurtures without smothering","Honors the past without being ruled by it","Protects fiercely, forgives fully"],
+  unevolved:["Moody, clings then withdraws","Uses guilt to keep people close","Never really forgives, just goes quiet","Takes everything personally"]},
+{name:"Leo",glyph:"♌",symbol:"The Lion",element:"Fire",mode:"Fixed",ruler:"Sun",rulerGlyph:"☉",house:"5th House",duality:"Masculine",polarity:"Aquarius",body:"Heart, spine",dates:"Jul 23 – Aug 22",
+  tagline:"Expresses. Wants to be seen and to matter.",
+  signQ:["Warm","Expressive","Proud","Generous","Dramatic"],
+  houseQ:["Creativity","Romance","Children","Self-expression"],
+  planetQ:["Identity","Will","Vitality","Core self"],
+  evolved:["Leads with warmth, not ego","Shines without needing to eclipse others","Loyal once trust is earned","Turns the need for attention into real creativity"],
+  unevolved:["Needs constant admiration to feel secure","Grandiose, can't stand being upstaged","Sulks or rages when ignored","Confuses being loved with being praised"]},
+{name:"Virgo",glyph:"♍",symbol:"The Virgin",element:"Earth",mode:"Mutable",ruler:"Mercury",rulerGlyph:"☿",house:"6th House",duality:"Feminine",polarity:"Pisces",body:"Digestive system",dates:"Aug 23 – Sep 22",
+  tagline:"Refines. Notices what's wrong and fixes it.",
+  signQ:["Analytical","Meticulous","Humble","Practical","Self-critical"],
+  houseQ:["Work","Routine","Health","Service"],
+  planetQ:["Analysis","Detail","Discernment","Order"],
+  evolved:["Turns discernment into real service","Improves systems without demanding perfection","Humble mastery, quiet competence","Notices what helps, not just what's wrong"],
+  unevolved:["Self-critical to the point of paralysis","Nitpicks others to avoid its own flaws","Mistakes being useful for being worthy","Can't relax until everything is right"]},
+{name:"Libra",glyph:"♎",symbol:"The Scales",element:"Air",mode:"Cardinal",ruler:"Venus",rulerGlyph:"♀",house:"7th House",duality:"Masculine",polarity:"Aries",body:"Kidneys, lower back",dates:"Sep 23 – Oct 22",
+  tagline:"Balances. Decides by weighing the other side.",
+  signQ:["Diplomatic","Charming","Fair-minded","Indecisive","Relational"],
+  houseQ:["Partnership","Marriage","One-to-one bonds"],
+  planetQ:["Harmony","Partnership","Aesthetics","Fairness"],
+  evolved:["Builds real fairness, not just appearances","Diplomatic without abandoning itself","Brings out the best in a partnership","Weighs both sides, then actually decides"],
+  unevolved:["Avoids conflict until resentment builds","People-pleases at its own expense","Indecisive, afraid to disappoint anyone","Chooses peace over truth"]},
+{name:"Scorpio",glyph:"♏",symbol:"The Scorpion",element:"Water",mode:"Fixed",ruler:"Pluto",rulerGlyph:"♇",house:"8th House",duality:"Feminine",polarity:"Taurus",body:"Reproductive system",dates:"Oct 23 – Nov 21",
+  tagline:"Transforms. Goes to the root, holds nothing lightly.",
+  signQ:["Intense","Magnetic","Secretive","Transformative","Loyal"],
+  houseQ:["Shared resources","Intimacy","Transformation"],
+  planetQ:["Transformation","Power","Depth","Regeneration"],
+  evolved:["Transforms pain into earned intimacy","Fiercely loyal once trust is built","Goes where others won't look","Powerful without needing control"],
+  unevolved:["Controls through jealousy and secrecy","Holds grudges indefinitely","Tests loyalty until it breaks","All or nothing, no middle ground"]},
+{name:"Sagittarius",glyph:"♐",symbol:"The Archer",element:"Fire",mode:"Mutable",ruler:"Jupiter",rulerGlyph:"♃",house:"9th House",duality:"Masculine",polarity:"Gemini",body:"Hips, thighs",dates:"Nov 22 – Dec 21",
+  tagline:"Expands. Needs a horizon to move toward.",
+  signQ:["Adventurous","Blunt","Philosophical","Optimistic","Restless"],
+  houseQ:["Higher learning","Philosophy","Travel","Belief"],
+  planetQ:["Growth","Expansion","Meaning","Faith"],
+  evolved:["Honest optimism that lifts others up","Turns restlessness into real growth","Teaches what it's learned, generously","Sees the big picture clearly"],
+  unevolved:["Blunt to the point of careless","Promises more than it delivers","Calls commitment a cage and runs","Preachy, certain its truth is the only one"]},
+{name:"Capricorn",glyph:"♑",symbol:"The Sea-Goat",element:"Earth",mode:"Cardinal",ruler:"Saturn",rulerGlyph:"♄",house:"10th House",duality:"Feminine",polarity:"Cancer",body:"Bones, knees, skin",dates:"Dec 22 – Jan 19",
+  tagline:"Builds structure. Earns things the long way.",
+  signQ:["Disciplined","Ambitious","Reserved","Responsible","Patient"],
+  houseQ:["Career","Reputation","Public standing"],
+  planetQ:["Structure","Discipline","Time","Responsibility"],
+  evolved:["Disciplined leadership that earns trust","Builds things that actually last","Responsible without martyrdom","Patient, plays the long game well"],
+  unevolved:["Workaholic, worth tied to achievement","Controlling, distrusts others' competence","Withholds warmth until it feels earned","All work, no permission to rest"]},
+{name:"Aquarius",glyph:"♒",symbol:"The Water Bearer",element:"Air",mode:"Fixed",ruler:"Uranus",rulerGlyph:"⛢",house:"11th House",duality:"Masculine",polarity:"Leo",body:"Circulation, ankles",dates:"Jan 20 – Feb 18",
+  tagline:"Detaches to see the system. Serves the group over the self.",
+  signQ:["Independent","Inventive","Detached","Humanitarian","Unconventional"],
+  houseQ:["Friends","Community","Hopes and goals"],
+  planetQ:["Innovation","Rebellion","Individuality","Vision"],
+  evolved:["Visionary who serves the collective","Loyal in its own unconventional way","Welcomes feedback instead of digging in","Individual without needing to isolate"],
+  unevolved:["Detached to the point of cold","Rebels for its own sake","So committed to different it won't compromise","Intellectualizes feeling instead of having it"]},
+{name:"Pisces",glyph:"♓",symbol:"The Fish",element:"Water",mode:"Mutable",ruler:"Neptune",rulerGlyph:"♆",house:"12th House",duality:"Feminine",polarity:"Virgo",body:"Feet",dates:"Feb 19 – Mar 20",
+  tagline:"Dissolves boundaries. Feels what isn't spoken.",
+  signQ:["Empathic","Dreamy","Elusive","Compassionate","Imaginative"],
+  houseQ:["The unconscious","Solitude","Endings","Hidden strengths"],
+  planetQ:["Dreams","Spirituality","Dissolution","Imagination"],
+  evolved:["Compassionate without losing itself","Channels imagination into art or healing","Forgives and genuinely releases","Merges with others while staying whole"],
+  unevolved:["Escapist, blurs its own boundaries","Plays the martyr or the victim","Avoids hard truths by disappearing","Absorbs everyone else's feelings as its own"]},
+];
+const ELCOLOR = {Fire:"var(--fire)", Earth:"var(--earth)", Air:"var(--air)", Water:"var(--water)"};
+
+let idx = 0;
+let flipped = false;
+
+const rail = document.getElementById('rail');
+const cardEl = document.getElementById('card');
+const frontEl = document.getElementById('front');
+const backEl = document.getElementById('back');
+const counterEl = document.getElementById('counter');
+
+SIGNS.forEach((s,i)=>{
+  const b = document.createElement('button');
+  b.textContent = s.glyph;
+  b.style.setProperty('--elcolor', ELCOLOR[s.element]);
+  b.title = s.name;
+  b.addEventListener('click', ()=>{ idx=i; flipped=false; render(); });
+  rail.appendChild(b);
+});
+
+function chips(list, tag){
+  return list.map(x=>`<span class="chip${tag?' tag':''}">${x}</span>`).join('');
+}
+
+function render(){
+  const s = SIGNS[idx];
+  const col = ELCOLOR[s.element];
+  cardEl.style.setProperty('--elcolor', col);
+  cardEl.classList.toggle('flipped', flipped);
+
+  frontEl.innerHTML = `
+    <div class="glyph">${s.glyph}</div>
+    <h2>${s.name}</h2>
+    <div class="dates">${s.dates}</div>
+    <div class="tagline">${s.tagline}</div>
+    <div class="hint">Tap to flip</div>
+  `;
+
+  backEl.innerHTML = `
+    <div class="bhead">
+      <span class="g">${s.glyph}</span>
+      <h3>${s.name}</h3>
+      <span class="em">${s.element} · ${s.mode}</span>
+    </div>
+
+    <p class="label">Correspondences</p>
+    <div class="facts">
+      <div class="k">Symbol</div><div class="v">${s.symbol}</div>
+      <div class="k">Ruling planet</div><div class="v">${s.rulerGlyph} ${s.ruler}</div>
+      <div class="k">Natural house</div><div class="v">${s.house}</div>
+      <div class="k">Duality</div><div class="v">${s.duality}</div>
+      <div class="k">Polarity</div><div class="v">${s.polarity}</div>
+      <div class="k">Body ruled</div><div class="v">${s.body}</div>
+    </div>
+
+    <div class="qual-block">
+      <p class="label">Qualities of the sign</p>
+      <div class="chips">${chips(s.signQ, true)}</div>
+    </div>
+    <div class="qual-block">
+      <p class="label">Qualities of the house (${s.house})</p>
+      <div class="chips">${chips(s.houseQ)}</div>
+    </div>
+    <div class="qual-block">
+      <p class="label">Qualities of the planet (${s.ruler})</p>
+      <div class="chips">${chips(s.planetQ)}</div>
+    </div>
+
+    <p class="label">At its best / at lower capacity</p>
+    <div class="ev-grid">
+      <div class="ev-col good"><div class="t">Evolved</div><ul>${s.evolved.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+      <div class="ev-col bad"><div class="t">Unevolved</div><ul>${s.unevolved.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+    </div>
+  `;
+
+  [...rail.children].forEach((b,i)=> b.setAttribute('aria-current', i===idx ? 'true':'false'));
+  counterEl.textContent = `${idx+1} / ${SIGNS.length} — ${s.element} sign`;
+
+  sizeCard();
+}
+
+function sizeCard(){
+  // Faces are absolutely positioned, so scrollHeight still reports full content
+  // height even while clipped. Grow the card to fit the taller face so nothing
+  // (like the evolved/unevolved section) gets cut off.
+  requestAnimationFrame(()=>{
+    const needed = Math.max(frontEl.scrollHeight, backEl.scrollHeight, 360);
+    cardEl.style.height = needed + 'px';
+  });
+}
+
+window.addEventListener('resize', sizeCard);
+
+cardEl.addEventListener('click', ()=>{ flipped = !flipped; cardEl.classList.toggle('flipped', flipped); });
+cardEl.addEventListener('keydown', (e)=>{
+  if(e.key===' '||e.key==='Enter'){ e.preventDefault(); flipped=!flipped; cardEl.classList.toggle('flipped', flipped); }
+  if(e.key==='ArrowRight'){ idx=(idx+1)%SIGNS.length; flipped=false; render(); }
+  if(e.key==='ArrowLeft'){ idx=(idx-1+SIGNS.length)%SIGNS.length; flipped=false; render(); }
+});
+document.getElementById('nextBtn').addEventListener('click', ()=>{ idx=(idx+1)%SIGNS.length; flipped=false; render(); });
+document.getElementById('prevBtn').addEventListener('click', ()=>{ idx=(idx-1+SIGNS.length)%SIGNS.length; flipped=false; render(); });
+
+render();
+</script>
