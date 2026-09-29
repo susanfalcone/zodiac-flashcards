@@ -88,7 +88,7 @@ h1,h2,h3{font-family:var(--font-display);font-weight:600;text-wrap:balance;margi
 .front h2{font-size:clamp(1.8rem,6vw,2.4rem);color:var(--fg)}
 .front .dates{font-family:var(--font-mono);color:var(--fg-dim);font-size:.95rem;letter-spacing:.02em}
 .front .tagline{max-width:32ch;color:var(--fg-dim);font-size:.95rem;font-style:italic}
-.front .hint{position:absolute;bottom:14px;font-size:.72rem;color:var(--fg-dim);letter-spacing:.06em;text-transform:uppercase}
+.front .hint{position:absolute;bottom:40px;font-size:.72rem;color:var(--fg-dim);letter-spacing:.06em;text-transform:uppercase}
 .front .housenum{
   width:32px;height:32px;border-radius:50%;
   border:1.5px solid var(--elcolor);color:var(--elcolor);background:var(--surface);
@@ -111,6 +111,7 @@ h1,h2,h3{font-family:var(--font-display);font-weight:600;text-wrap:balance;margi
 .facts .row{display:contents}
 
 .qual-block{margin-bottom:12px}
+.lifelesson{margin:0;font-size:.86rem;font-style:italic;line-height:1.5;color:var(--fg);padding-left:10px;border-left:3px solid var(--elcolor)}
 .chips{display:flex;flex-wrap:wrap;gap:5px}
 .chip{font-size:.74rem;padding:3px 9px;border-radius:999px;background:var(--surface-2);border:1px solid var(--border);color:var(--fg)}
 .chip.tag{border-color:var(--elcolor);color:var(--elcolor)}
@@ -157,84 +158,96 @@ const SIGNS = [
   houseQ:["Identity","Self-image","First impressions","Initiative"],
   planetQ:["Drive","Action","Desire","Assertion"],
   evolved:["Leads with courage, not force","Acts fast without needing to fight","Turns anger into clean, direct honesty","Inspires others to move"],
-  unevolved:["Impulsive to the point of reckless","Picks fights to feel alive","Starts more than it finishes","Turns everything into a competition"]},
+  unevolved:["Impulsive to the point of reckless","Picks fights to feel alive","Starts more than it finishes","Turns everything into a competition"],
+  lifeLesson:"Temper the drive to win with patience for other people, and learn when a fight is actually finished."},
 {name:"Taurus",glyph:"♉",symbol:"The Bull",element:"Earth",mode:"Fixed",ruler:"Venus",rulerGlyph:"♀",house:"2nd House",duality:"Feminine",polarity:"Scorpio",body:"Neck, throat",dates:"Apr 20 – May 20",
   tagline:"Builds. Moves slowly and holds its ground.",
   signQ:["Steady","Sensual","Patient","Possessive","Grounded"],
   houseQ:["Money","Possessions","Self-worth","Values"],
   planetQ:["Love","Values","Pleasure","Attraction"],
   evolved:["Builds lasting security, patiently","Enjoys pleasure without guilt","A steady presence others lean on","Loves itself exactly as it is"],
-  unevolved:["Stubborn to the point of immovable","Possessive of people and things","Measures worth by what it owns","Resists change even when it helps"]},
+  unevolved:["Stubborn to the point of immovable","Possessive of people and things","Measures worth by what it owns","Resists change even when it helps"],
+  lifeLesson:"Slowing down and being content with enough isn't settling. Let go before holding on turns into stuck."},
 {name:"Gemini",glyph:"♊",symbol:"The Twins",element:"Air",mode:"Mutable",ruler:"Mercury",rulerGlyph:"☿",house:"3rd House",duality:"Masculine",polarity:"Sagittarius",body:"Hands, arms, lungs",dates:"May 21 – Jun 20",
   tagline:"Connects. Gathers information, talks it through.",
   signQ:["Curious","Talkative","Adaptable","Witty","Scattered"],
   houseQ:["Communication","Siblings","Local environment","Learning"],
   planetQ:["Communication","Thinking","Learning","Exchange"],
   evolved:["Connects ideas and people with ease","Genuinely curious, genuinely listens","Adapts without losing the thread","Makes complex things simple"],
-  unevolved:["Scattered, starts everything, finishes little","Talks past people instead of with them","Says what's easy, not what's true","Flighty when things get serious"]},
+  unevolved:["Scattered, starts everything, finishes little","Talks past people instead of with them","Says what's easy, not what's true","Flighty when things get serious"],
+  lifeLesson:"Quiet the mind long enough to actually feel something before talking about it."},
 {name:"Cancer",glyph:"♋",symbol:"The Crab",element:"Water",mode:"Cardinal",ruler:"Moon",rulerGlyph:"☽",house:"4th House",duality:"Feminine",polarity:"Capricorn",body:"Chest, stomach",dates:"Jun 21 – Jul 22",
   tagline:"Protects. Feels first, decides from there.",
   signQ:["Nurturing","Protective","Moody","Intuitive","Loyal"],
   houseQ:["Home","Family","Roots","Emotional foundation"],
   planetQ:["Emotion","Instinct","Comfort","Memory"],
   evolved:["Creates real emotional safety","Nurtures without smothering","Honors the past without being ruled by it","Protects fiercely, forgives fully"],
-  unevolved:["Moody, clings then withdraws","Uses guilt to keep people close","Never really forgives, just goes quiet","Takes everything personally"]},
+  unevolved:["Moody, clings then withdraws","Uses guilt to keep people close","Never really forgives, just goes quiet","Takes everything personally"],
+  lifeLesson:"Let feelings move all the way through instead of turning them into grudges or guilt trips."},
 {name:"Leo",glyph:"♌",symbol:"The Lion",element:"Fire",mode:"Fixed",ruler:"Sun",rulerGlyph:"☉",house:"5th House",duality:"Masculine",polarity:"Aquarius",body:"Heart, spine",dates:"Jul 23 – Aug 22",
   tagline:"Expresses. Wants to be seen and to matter.",
   signQ:["Warm","Expressive","Proud","Generous","Dramatic"],
   houseQ:["Creativity","Romance","Children","Self-expression"],
   planetQ:["Identity","Will","Vitality","Core self"],
   evolved:["Leads with warmth, not ego","Shines without needing to eclipse others","Loyal once trust is earned","Turns the need for attention into real creativity"],
-  unevolved:["Needs constant admiration to feel secure","Grandiose, can't stand being upstaged","Sulks or rages when ignored","Confuses being loved with being praised"]},
+  unevolved:["Needs constant admiration to feel secure","Grandiose, can't stand being upstaged","Sulks or rages when ignored","Confuses being loved with being praised"],
+  lifeLesson:"Real recognition means sharing the stage. Vulnerability, not performance, is the actual strength."},
 {name:"Virgo",glyph:"♍",symbol:"The Virgin",element:"Earth",mode:"Mutable",ruler:"Mercury",rulerGlyph:"☿",house:"6th House",duality:"Feminine",polarity:"Pisces",body:"Digestive system",dates:"Aug 23 – Sep 22",
   tagline:"Refines. Notices what's wrong and fixes it.",
   signQ:["Analytical","Meticulous","Humble","Practical","Self-critical"],
   houseQ:["Work","Routine","Health","Service"],
   planetQ:["Analysis","Detail","Discernment","Order"],
   evolved:["Turns discernment into real service","Improves systems without demanding perfection","Humble mastery, quiet competence","Notices what helps, not just what's wrong"],
-  unevolved:["Self-critical to the point of paralysis","Nitpicks others to avoid its own flaws","Mistakes being useful for being worthy","Can't relax until everything is right"]},
+  unevolved:["Self-critical to the point of paralysis","Nitpicks others to avoid its own flaws","Mistakes being useful for being worthy","Can't relax until everything is right"],
+  lifeLesson:"Trade harsh judgment for genuine service, and let a little faith fill in where logic runs out."},
 {name:"Libra",glyph:"♎",symbol:"The Scales",element:"Air",mode:"Cardinal",ruler:"Venus",rulerGlyph:"♀",house:"7th House",duality:"Masculine",polarity:"Aries",body:"Kidneys, lower back",dates:"Sep 23 – Oct 22",
   tagline:"Balances. Decides by weighing the other side.",
   signQ:["Diplomatic","Charming","Fair-minded","Indecisive","Relational"],
   houseQ:["Partnership","Marriage","One-to-one bonds"],
   planetQ:["Harmony","Partnership","Aesthetics","Fairness"],
   evolved:["Builds real fairness, not just appearances","Diplomatic without abandoning itself","Brings out the best in a partnership","Weighs both sides, then actually decides"],
-  unevolved:["Avoids conflict until resentment builds","People-pleases at its own expense","Indecisive, afraid to disappoint anyone","Chooses peace over truth"]},
+  unevolved:["Avoids conflict until resentment builds","People-pleases at its own expense","Indecisive, afraid to disappoint anyone","Chooses peace over truth"],
+  lifeLesson:"Turn some of that famous fairness inward, and choose for yourself before you weigh everyone else's side."},
 {name:"Scorpio",glyph:"♏",symbol:"The Scorpion",element:"Water",mode:"Fixed",ruler:"Pluto",rulerGlyph:"♇",house:"8th House",duality:"Feminine",polarity:"Taurus",body:"Reproductive system",dates:"Oct 23 – Nov 21",
   tagline:"Transforms. Goes to the root, holds nothing lightly.",
   signQ:["Intense","Magnetic","Secretive","Transformative","Loyal"],
   houseQ:["Shared resources","Intimacy","Transformation"],
   planetQ:["Transformation","Power","Depth","Regeneration"],
   evolved:["Transforms pain into earned intimacy","Fiercely loyal once trust is built","Goes where others won't look","Powerful without needing control"],
-  unevolved:["Controls through jealousy and secrecy","Holds grudges indefinitely","Tests loyalty until it breaks","All or nothing, no middle ground"]},
+  unevolved:["Controls through jealousy and secrecy","Holds grudges indefinitely","Tests loyalty until it breaks","All or nothing, no middle ground"],
+  lifeLesson:"Releasing control is safer than gripping it. Emotional honesty includes admitting the tears too."},
 {name:"Sagittarius",glyph:"♐",symbol:"The Archer",element:"Fire",mode:"Mutable",ruler:"Jupiter",rulerGlyph:"♃",house:"9th House",duality:"Masculine",polarity:"Gemini",body:"Hips, thighs",dates:"Nov 22 – Dec 21",
   tagline:"Expands. Needs a horizon to move toward.",
   signQ:["Adventurous","Blunt","Philosophical","Optimistic","Restless"],
   houseQ:["Higher learning","Philosophy","Travel","Belief"],
   planetQ:["Growth","Expansion","Meaning","Faith"],
   evolved:["Honest optimism that lifts others up","Turns restlessness into real growth","Teaches what it's learned, generously","Sees the big picture clearly"],
-  unevolved:["Blunt to the point of careless","Promises more than it delivers","Calls commitment a cage and runs","Preachy, certain its truth is the only one"]},
+  unevolved:["Blunt to the point of careless","Promises more than it delivers","Calls commitment a cage and runs","Preachy, certain its truth is the only one"],
+  lifeLesson:"Moderation. Truth-telling still needs tact, and an open mind cuts both ways."},
 {name:"Capricorn",glyph:"♑",symbol:"The Sea-Goat",element:"Earth",mode:"Cardinal",ruler:"Saturn",rulerGlyph:"♄",house:"10th House",duality:"Feminine",polarity:"Cancer",body:"Bones, knees, skin",dates:"Dec 22 – Jan 19",
   tagline:"Builds structure. Earns things the long way.",
   signQ:["Disciplined","Ambitious","Reserved","Responsible","Patient"],
   houseQ:["Career","Reputation","Public standing"],
   planetQ:["Structure","Discipline","Time","Responsibility"],
   evolved:["Disciplined leadership that earns trust","Builds things that actually last","Responsible without martyrdom","Patient, plays the long game well"],
-  unevolved:["Workaholic, worth tied to achievement","Controlling, distrusts others' competence","Withholds warmth until it feels earned","All work, no permission to rest"]},
+  unevolved:["Workaholic, worth tied to achievement","Controlling, distrusts others' competence","Withholds warmth until it feels earned","All work, no permission to rest"],
+  lifeLesson:"Humility. Being useful doesn't require carrying it alone, and rest doesn't have to be earned."},
 {name:"Aquarius",glyph:"♒",symbol:"The Water Bearer",element:"Air",mode:"Fixed",ruler:"Uranus",rulerGlyph:"⛢",house:"11th House",duality:"Masculine",polarity:"Leo",body:"Circulation, ankles",dates:"Jan 20 – Feb 18",
   tagline:"Detaches to see the system. Serves the group over the self.",
   signQ:["Independent","Inventive","Detached","Humanitarian","Unconventional"],
   houseQ:["Friends","Community","Hopes and goals"],
   planetQ:["Innovation","Rebellion","Individuality","Vision"],
   evolved:["Visionary who serves the collective","Loyal in its own unconventional way","Welcomes feedback instead of digging in","Individual without needing to isolate"],
-  unevolved:["Detached to the point of cold","Rebels for its own sake","So committed to different it won't compromise","Intellectualizes feeling instead of having it"]},
+  unevolved:["Detached to the point of cold","Rebels for its own sake","So committed to different it won't compromise","Intellectualizes feeling instead of having it"],
+  lifeLesson:"Accept your own eccentricity before asking the world to accept it. Being yourself doesn't require a cause."},
 {name:"Pisces",glyph:"♓",symbol:"The Fish",element:"Water",mode:"Mutable",ruler:"Neptune",rulerGlyph:"♆",house:"12th House",duality:"Feminine",polarity:"Virgo",body:"Feet",dates:"Feb 19 – Mar 20",
   tagline:"Dissolves boundaries. Feels what isn't spoken.",
   signQ:["Empathic","Dreamy","Elusive","Compassionate","Imaginative"],
   houseQ:["The unconscious","Solitude","Endings","Hidden strengths"],
   planetQ:["Dreams","Spirituality","Dissolution","Imagination"],
   evolved:["Compassionate without losing itself","Channels imagination into art or healing","Forgives and genuinely releases","Merges with others while staying whole"],
-  unevolved:["Escapist, blurs its own boundaries","Plays the martyr or the victim","Avoids hard truths by disappearing","Absorbs everyone else's feelings as its own"]},
+  unevolved:["Escapist, blurs its own boundaries","Plays the martyr or the victim","Avoids hard truths by disappearing","Absorbs everyone else's feelings as its own"],
+  lifeLesson:"Set real boundaries so compassion doesn't turn into self-erasure. Responsibility, not escape."},
 ];
 const ELCOLOR = {Fire:"var(--fire)", Earth:"var(--earth)", Air:"var(--air)", Water:"var(--water)"};
 
@@ -303,6 +316,11 @@ function render(){
     <div class="qual-block">
       <p class="label">Qualities of the planet (${s.ruler})</p>
       <div class="chips">${chips(s.planetQ)}</div>
+    </div>
+
+    <div class="qual-block">
+      <p class="label">Life lesson</p>
+      <p class="lifelesson">${s.lifeLesson}</p>
     </div>
 
     <p class="label">At its best / at lower capacity</p>
