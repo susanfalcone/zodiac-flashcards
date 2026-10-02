@@ -53,7 +53,7 @@ h1,h2,h3{font-family:var(--font-display);font-weight:600;text-wrap:balance;margi
 .rail button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 
 /* card */
-.card-outer{width:100%;perspective:1600px}
+.card-outer{width:100%;perspective:1600px;container-type:inline-size;will-change:transform}
 
 /* controls: full-width bar below the card, sized for easy thumb taps */
 .controls{display:flex;align-items:stretch;gap:8px}
@@ -79,20 +79,20 @@ h1,h2,h3{font-family:var(--font-display);font-weight:600;text-wrap:balance;margi
 .face.back{transform:rotateY(180deg);overflow-y:auto}
 
 /* front face */
-.front{align-items:center;justify-content:center;text-align:center;gap:10px;padding:24px;
+.front{align-items:center;justify-content:center;text-align:center;gap:clamp(8px,2.4cqi,16px);padding:clamp(20px,5cqi,40px);
   background:
     radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--elcolor) 16%, transparent), transparent 60%),
     var(--surface);
 }
-.front .glyph{font-size:clamp(4.5rem,18vw,6rem);color:var(--elcolor);line-height:1}
-.front h2{font-size:clamp(1.8rem,6vw,2.4rem);color:var(--fg)}
-.front .dates{font-family:var(--font-mono);color:var(--fg-dim);font-size:.95rem;letter-spacing:.02em}
-.front .tagline{max-width:32ch;color:var(--fg-dim);font-size:.95rem;font-style:italic}
-.front .hint{position:absolute;top:14px;font-size:.72rem;color:var(--fg-dim);letter-spacing:.06em;text-transform:uppercase}
+.front .glyph{font-size:clamp(4.5rem,30cqi,9rem);color:var(--elcolor);line-height:1}
+.front h2{font-size:clamp(1.8rem,9cqi,3.4rem);color:var(--fg)}
+.front .dates{font-family:var(--font-mono);color:var(--fg-dim);font-size:clamp(.95rem,3.6cqi,1.35rem);letter-spacing:.02em}
+.front .tagline{max-width:32ch;color:var(--fg-dim);font-size:clamp(.95rem,3.8cqi,1.35rem);font-style:italic}
+.front .hint{position:absolute;top:14px;font-size:clamp(.72rem,2.4cqi,.9rem);color:var(--fg-dim);letter-spacing:.06em;text-transform:uppercase}
 .front .housenum{
-  width:32px;height:32px;border-radius:50%;
+  width:clamp(32px,7cqi,46px);height:clamp(32px,7cqi,46px);border-radius:50%;
   border:1.5px solid var(--elcolor);color:var(--elcolor);background:var(--surface);
-  font-family:var(--font-mono);font-weight:700;font-size:.92rem;
+  font-family:var(--font-mono);font-weight:700;font-size:clamp(.92rem,3cqi,1.3rem);
   display:flex;align-items:center;justify-content:center;
 }
 
@@ -265,7 +265,7 @@ SIGNS.forEach((s,i)=>{
   b.textContent = s.glyph + '︎';
   b.style.setProperty('--elcolor', ELCOLOR[s.element]);
   b.title = s.name;
-  b.addEventListener('click', ()=>{ idx=i; flipped=false; render(); });
+  b.addEventListener('click', ()=>{ goTo(i, i>idx ? +1 : -1); });
   rail.appendChild(b);
 });
 
@@ -341,38 +341,87 @@ function sizeCard(){
   // height even while clipped. Grow the card to fit the taller face so nothing
   // (like the evolved/unevolved section) gets cut off.
   requestAnimationFrame(()=>{
-    const needed = Math.max(frontEl.scrollHeight, backEl.scrollHeight, 360);
+    // Base height scales with card width and viewport height, then grows if the back needs more.
+    const w = cardEl.offsetWidth;
+    const base = Math.round(Math.max(360, Math.min(w*1.15, window.innerHeight*0.62, 620)));
+    cardEl.style.transition = 'none';
+    cardEl.style.height = base + 'px';
+    // Cap at ~72% of the viewport so Prev/Next stay on screen; the back face scrolls inside the card.
+    const cap = Math.max(base, Math.round(window.innerHeight*0.72));
+    const needed = Math.min(cap, Math.max(base, backEl.scrollHeight));
     cardEl.style.height = needed + 'px';
+    void cardEl.offsetHeight;
+    cardEl.style.transition = '';
   });
 }
 
 window.addEventListener('resize', sizeCard);
 
-// Swipe left = next card, swipe right = previous card. Tap still flips.
-let tx=0, ty=0, tt=0, swiped=false;
+const outerEl = document.querySelector('.card-outer');
+const N = SIGNS.length;
+const reduceMotion = ()=> window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let busy = false, dragX = 0;
+
+function resetOuter(){ outerEl.style.transform=''; outerEl.style.opacity=''; dragX=0; }
+
+// dir = +1 slides the old card out to the left (next), -1 out to the right (previous).
+async function goTo(newIdx, dir){
+  if(busy || newIdx===idx) return;
+  busy = true;
+  const swap = ()=>{ idx=newIdx; flipped=false; render(); };
+  if(reduceMotion()){ resetOuter(); swap(); busy=false; return; }
+  const w = outerEl.offsetWidth;
+  const from = dragX;
+  const pose = (x)=>({ transform:`translateX(${x}px) rotate(${x/w*8}deg)`, opacity: Math.max(0, 1-Math.abs(x)/w*0.9) });
+  resetOuter();
+  await outerEl.animate([pose(from), pose(-dir*w*0.55)], {duration:170, easing:'cubic-bezier(.4,0,1,1)', fill:'forwards'}).finished;
+  swap();
+  await outerEl.animate([pose(dir*w*0.55), pose(0)], {duration:300, easing:'cubic-bezier(.2,.9,.2,1.05)', fill:'forwards'}).finished;
+  outerEl.getAnimations().forEach(a=>a.cancel());
+  busy = false;
+}
+const goNext = ()=> goTo((idx+1)%N, +1);
+const goPrev = ()=> goTo((idx-1+N)%N, -1);
+
+// Swipe left = next card, swipe right = previous card. The card follows your finger. Tap still flips.
+let tx=0, ty=0, tt=0, swiped=false, dragging=false;
 cardEl.addEventListener('touchstart', (e)=>{
-  if(e.touches.length!==1) return;
-  tx=e.touches[0].clientX; ty=e.touches[0].clientY; tt=Date.now(); swiped=false;
+  if(e.touches.length!==1 || busy) return;
+  tx=e.touches[0].clientX; ty=e.touches[0].clientY; tt=Date.now(); swiped=false; dragging=false;
+}, {passive:true});
+cardEl.addEventListener('touchmove', (e)=>{
+  if(busy) return;
+  const t=e.touches[0], dx=t.clientX-tx, dy=t.clientY-ty;
+  if(!dragging && Math.abs(dx)>12 && Math.abs(dx)>Math.abs(dy)*1.5) dragging=true;
+  if(!dragging) return;
+  const w=outerEl.offsetWidth;
+  dragX = dx*0.7;
+  outerEl.style.transform = `translateX(${dragX}px) rotate(${dragX/w*8}deg)`;
+  outerEl.style.opacity = Math.max(0.5, 1-Math.abs(dragX)/w*0.9);
 }, {passive:true});
 cardEl.addEventListener('touchend', (e)=>{
-  const t=e.changedTouches[0];
-  const dx=t.clientX-tx, dy=t.clientY-ty;
-  // horizontal-dominant, long enough, and quick enough; vertical scrolling on the back face is left alone
-  if(Math.abs(dx)>50 && Math.abs(dx)>Math.abs(dy)*1.5 && Date.now()-tt<800){
-    swiped=true;
-    idx = dx<0 ? (idx+1)%SIGNS.length : (idx-1+SIGNS.length)%SIGNS.length;
-    flipped=false; render();
+  if(!dragging) return;
+  dragging=false; swiped=true;
+  const dx=e.changedTouches[0].clientX-tx, quick=Date.now()-tt<400;
+  if(Math.abs(dx)>70 || (quick && Math.abs(dx)>35)){
+    dx<0 ? goNext() : goPrev();
+  } else {
+    // not far enough: spring back
+    const from=dragX, w=outerEl.offsetWidth;
+    resetOuter();
+    outerEl.animate([{transform:`translateX(${from}px) rotate(${from/w*8}deg)`},{transform:'none'}], {duration:260, easing:'cubic-bezier(.2,.9,.2,1.1)'});
   }
 }, {passive:true});
+cardEl.addEventListener('touchcancel', ()=>{ if(dragging){ dragging=false; resetOuter(); } }, {passive:true});
 
 cardEl.addEventListener('click', (e)=>{ if(swiped){ swiped=false; return; } flipped = !flipped; cardEl.classList.toggle('flipped', flipped); });
 cardEl.addEventListener('keydown', (e)=>{
   if(e.key===' '||e.key==='Enter'){ e.preventDefault(); flipped=!flipped; cardEl.classList.toggle('flipped', flipped); }
-  if(e.key==='ArrowRight'){ idx=(idx+1)%SIGNS.length; flipped=false; render(); }
-  if(e.key==='ArrowLeft'){ idx=(idx-1+SIGNS.length)%SIGNS.length; flipped=false; render(); }
+  if(e.key==='ArrowRight') goNext();
+  if(e.key==='ArrowLeft') goPrev();
 });
-document.getElementById('nextBtn').addEventListener('click', ()=>{ idx=(idx+1)%SIGNS.length; flipped=false; render(); });
-document.getElementById('prevBtn').addEventListener('click', ()=>{ idx=(idx-1+SIGNS.length)%SIGNS.length; flipped=false; render(); });
+document.getElementById('nextBtn').addEventListener('click', goNext);
+document.getElementById('prevBtn').addEventListener('click', goPrev);
 
 render();
 </script>
