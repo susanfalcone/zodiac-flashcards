@@ -68,7 +68,7 @@ h1,h2,h3{font-family:var(--font-display);font-weight:600;text-wrap:balance;margi
 .navbtn .arrow{font-size:1.2rem;line-height:1}
 .counter{flex:0 0 auto;min-width:96px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:.76rem;color:var(--fg-dim);padding:0 6px}
 .card{
-  position:relative;height:440px;border-radius:20px;cursor:pointer;
+  position:relative;height:440px;border-radius:20px;cursor:pointer;touch-action:pan-y;
   transform-style:preserve-3d;transition:transform .55s cubic-bezier(.2,.8,.2,1), height .25s ease;
 }
 .card.flipped{transform:rotateY(180deg)}
@@ -285,7 +285,7 @@ function render(){
     <h2>${s.name}</h2>
     <div class="dates">${s.dates}</div>
     <div class="tagline">${s.tagline}</div>
-    <div class="hint">Tap to flip</div>
+    <div class="hint">Tap to flip · Swipe for next</div>
   `;
 
   backEl.innerHTML = `
@@ -348,7 +348,24 @@ function sizeCard(){
 
 window.addEventListener('resize', sizeCard);
 
-cardEl.addEventListener('click', ()=>{ flipped = !flipped; cardEl.classList.toggle('flipped', flipped); });
+// Swipe left = next card, swipe right = previous card. Tap still flips.
+let tx=0, ty=0, tt=0, swiped=false;
+cardEl.addEventListener('touchstart', (e)=>{
+  if(e.touches.length!==1) return;
+  tx=e.touches[0].clientX; ty=e.touches[0].clientY; tt=Date.now(); swiped=false;
+}, {passive:true});
+cardEl.addEventListener('touchend', (e)=>{
+  const t=e.changedTouches[0];
+  const dx=t.clientX-tx, dy=t.clientY-ty;
+  // horizontal-dominant, long enough, and quick enough; vertical scrolling on the back face is left alone
+  if(Math.abs(dx)>50 && Math.abs(dx)>Math.abs(dy)*1.5 && Date.now()-tt<800){
+    swiped=true;
+    idx = dx<0 ? (idx+1)%SIGNS.length : (idx-1+SIGNS.length)%SIGNS.length;
+    flipped=false; render();
+  }
+}, {passive:true});
+
+cardEl.addEventListener('click', (e)=>{ if(swiped){ swiped=false; return; } flipped = !flipped; cardEl.classList.toggle('flipped', flipped); });
 cardEl.addEventListener('keydown', (e)=>{
   if(e.key===' '||e.key==='Enter'){ e.preventDefault(); flipped=!flipped; cardEl.classList.toggle('flipped', flipped); }
   if(e.key==='ArrowRight'){ idx=(idx+1)%SIGNS.length; flipped=false; render(); }
