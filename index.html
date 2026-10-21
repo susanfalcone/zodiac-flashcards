@@ -170,7 +170,7 @@ h1,h2,h3{font-family:var(--font-display);font-weight:600;text-wrap:balance;margi
 
   <nav class="rail" id="rail" aria-label="Jump to card"></nav>
 
-  <p class="src">Sources: Debra Silverman’s Level 1 coursebook and lectures, plus <em>The Only Astrology Book You'll Ever Need</em> (Woolfolk)</p>
+  <p class="src">Study cards for the signs, planets, elements, modes, and houses</p>
 </div>
 
 <script>
@@ -275,7 +275,7 @@ const SIGNS = [
 const ELCOLOR = {Fire:"var(--fire)", Earth:"var(--earth)", Air:"var(--air)", Water:"var(--water)", Gold:"var(--gold)"};
 const VS = '︎';
 
-/* ---------- PLANETS (coursebook pp. 81-82, Debra's lectures, 10/20 review) ---------- */
+/* ---------- PLANETS (coursebook pp. 81-82, lectures, 10/20 review) ---------- */
 const PLANETS = [
 {name:"Sun",glyph:"☉",kw:"Life force · Personality · Self-expression",tagline:"Your personality and ego. The part that wants to be seen.",
   rules:"Leo",house:"5th House",said:"I will (Leo)",exalted:"Aries",detriment:"Aquarius",fall:"Libra",
@@ -291,8 +291,8 @@ const PLANETS = [
   rules:"Gemini, Virgo",house:"3rd and 6th House",said:"I think (Gemini), I analyze (Virgo)",exalted:"Aquarius",detriment:"Sagittarius, Pisces",fall:"Pisces",
   chips:["Intellect","Communication","The way you think and learn"],
   quote:"Find your Mercury to catch the inner voice and notice your internal dialogue.",
-  points:["Mercury rules two signs, Gemini and Virgo","The observer is Debra’s tool for Mercury: step back and watch the thought"],
-  note:"DSA teaches Mercury exalted in Aquarius. Traditionally it is Virgo."},
+  points:["Mercury rules two signs, Gemini and Virgo","The observer is the tool for Mercury: step back and watch the thought"],
+  note:"Taught here as exalted in Aquarius. Traditionally it is Virgo."},
 {name:"Venus",glyph:"♀",kw:"Values · Desires · Pleasure · Softness",tagline:"How and what you love. What you are attracted to.",
   rules:"Taurus, Libra",house:"2nd and 7th House",said:"I have (Taurus), I balance (Libra)",exalted:"Pisces",detriment:"Scorpio, Aries",fall:"Virgo",
   chips:["Values and desires","Attraction","Pleasure","Beauty and art"],
@@ -308,12 +308,12 @@ const PLANETS = [
   chips:["Expansion","What you enjoy most","Luck","Ease","Magnifies"],
   quote:"Santa Claus energy. Jupiter is just a party waiting to happen.",
   points:["Its keyword is more: more food, play, spending, travel","Also about truth-telling and bluntness","A diet that never lets you eat is Saturn, not Jupiter","Red lines to Jupiter on a chart can mean restricted access to joy"],
-  note:"Debra’s lectures say Jupiter is exalted in Pisces. The coursebook table says Cancer. Still open."},
+  note:"Sources differ: the coursebook table says Cancer, the lectures say Pisces. Still open."},
 {name:"Saturn",glyph:"♄",kw:"Adult · Life lessons · Maturity · Restrictions · Responsibility",tagline:"The promise you made before you arrived. The lesson you can’t skip.",
   rules:"Capricorn (Aquarius traditionally)",house:"10th House",said:"I use (Capricorn)",exalted:"Libra",detriment:"Cancer, Leo",fall:"Aries",
   chips:["Life lessons","Destiny","Discipline","Limits","Responsibility","Maturity"],
-  quote:"Silverman and Saturn are BFFs.",
-  points:["The most important planet in Debra’s system","Saturn knocks. Ignore it and it knocks the door down","Seven-year markers: ages 7, 14, 21, then the first return at about 28 to 30","Transiting Saturn in the same mode as natal Saturn means a Saturn cycle is active","Nothing to fear: it supports the path to mastery and wisdom"]},
+  quote:"Saturn is the teacher, and the lessons are not optional.",
+  points:["The most important planet in this system","Saturn knocks. Ignore it and it knocks the door down","Seven-year markers: ages 7, 14, 21, then the first return at about 28 to 30","Transiting Saturn in the same mode as natal Saturn means a Saturn cycle is active","Nothing to fear: it supports the path to mastery and wisdom"]},
 {name:"Uranus",glyph:"⛢",kw:"Freedom · Changes · Chaos · Genius · Eccentricity",tagline:"Breaks the pattern. The unexpected and the genius.",
   rules:"Aquarius (Saturn traditionally)",house:"11th House",said:"I know (Aquarius)",exalted:"Not listed",detriment:"Leo",fall:"Not listed",
   chips:["Freedom","Changes","Chaos, the unexpected","Genius","Eccentricity"],
@@ -390,7 +390,7 @@ const MODES = [
 ];
 
 
-/* ---------- HOUSES (Houses: the Stage sheet; W Woolfolk, B Bloch, R Racioppi, coursebook pp.144-145, classes 10/1, 10/6, 10/13) ---------- */
+/* ---------- HOUSES (Houses study sheet) ---------- */
 const HOUSES = [
 {kind:"intro",name:"How houses work",short:"All"},
 {n:1,ord:"1st",sign:0,title:"Self",line:"Body, looks, mannerisms, how others see you",chips:["Body","Looks","Mannerisms","How others see you","The lens for the chart"],band:"Personal",angle:"Rising (Ascendant) starts it",mine:"Neptune (Sagittarius)"},
@@ -402,13 +402,13 @@ const HOUSES = [
 {n:7,ord:"7th",sign:6,title:"Partnership",line:"Marriage, business partners, contracts, open enemies",chips:["Marriage","Business partners","Contracts","Open enemies"],band:"Social",angle:"Descendant starts it",mine:"Empty"},
 {n:8,ord:"8th",sign:7,title:"Transformation",line:"Shared money, inheritance, intimacy, death, the occult",chips:["Shared money","Inheritance","Intimacy","Death","The occult"],band:"Social",mystical:true,mine:"Saturn (Gemini)"},
 {n:9,ord:"9th",sign:8,title:"Expansion",line:"Higher education, philosophy, religion, long travel, publishing",chips:["Higher education","Philosophy","Religion","Long travel","Publishing"],band:"Universal",mine:"Venus (Cancer)"},
-{n:10,ord:"10th",sign:9,title:"Career and reputation",line:"Profession, status, ambition, authority",chips:["Profession","Status","Ambition","Authority"],band:"Universal",angle:"Midheaven starts it",mine:"Sun, Mars (Virgo); Mercury (Leo). A stellium",class:"The house of responsibility, work, and leadership (Jillian)"},
+{n:10,ord:"10th",sign:9,title:"Career and reputation",line:"Profession, status, ambition, authority",chips:["Profession","Status","Ambition","Authority"],band:"Universal",angle:"Midheaven starts it",mine:"Sun, Mars (Virgo); Mercury (Leo). A stellium",class:"The house of responsibility, work, and leadership"},
 {n:11,ord:"11th",sign:10,title:"Friends and groups",line:"Long-term hopes and wishes, causes, community, ideals",chips:["Long-term hopes and wishes","Causes","Community","Ideals"],band:"Universal",mine:"Pluto (Libra)"},
 {n:12,ord:"12th",sign:11,title:"The hidden",line:"Subconscious, secrets, solitude, karma, self-undoing",chips:["Subconscious","Secrets","Solitude","Karma","Self-undoing"],band:"Universal",mystical:true,mine:"Uranus (Libra)"}
 ];
 const GROUPS = {1:"Angular",4:"Angular",7:"Angular",10:"Angular",2:"Succedent",5:"Succedent",8:"Succedent",11:"Succedent",3:"Cadent",6:"Cadent",9:"Cadent",12:"Cadent"};
-const GROUPNOTE = {Angular:"Cardinal houses. Prominence in the world (W)",Succedent:"Fixed houses. Stability, willpower, fixity of purpose (W)",Cadent:"Mutable houses. Mentally active, communicates ideas (W)"};
-const BANDNOTE = {Personal:"Houses 1 to 4: self, money, mind, home (B)",Social:"Houses 5 to 8: create, serve, partner, merge (B)",Universal:"Houses 9 to 12: meaning, society, the unseen (B)"};
+const GROUPNOTE = {Angular:"Cardinal houses. Prominence in the world",Succedent:"Fixed houses. Stability, willpower, fixity of purpose",Cadent:"Mutable houses. Mentally active, communicates ideas"};
+const BANDNOTE = {Personal:"Houses 1 to 4: self, money, mind, home",Social:"Houses 5 to 8: create, serve, partner, merge",Universal:"Houses 9 to 12: meaning, society, the unseen"};
 const oppHouse = n => ((n+5)%12)+1;
 const ordOf = n => HOUSES[oppHouse(n)].ord;
 
@@ -497,16 +497,16 @@ const DECKS = {
       ${block("Rules of the wheel", bullets(["The twelve houses come in the same order as the twelve signs, so house number matches sign number","Each house carries a little of its sign’s flavor","The Rising sign starts house 1, which is why you need a birth time","The house your Sun sits in is the most important house of your chart","A stellium is three or more planets in one house, which adds weight there"]))}
       ${block("Find it", `<p class="lifelesson">Pull your chart on astro.com and read the house number beside each planet. Houses run in order from the Rising sign.</p>`)}
       ${block("Questions (coursebook p.145)", bullets(["Which house has the most planets?","Which house is your Sun in?","How is your Rising sign different from your personality?"]))}
-      <p class="note">Houses are a Level 2 topic. Until then, house meanings come from Woolfolk (W), Bloch (B), and Racioppi (R), plus the coursebook and classes.</p>`
+      <p class="note">Basic house meanings, to be refined as study continues.</p>`
     : `
       ${bhead(SIGNS[h.sign].glyph+VS, h.ord+" House", GROUPS[h.n])}
       <p class="label">Correspondences</p>
       ${facts([["Title",h.title],["Matching sign",`${SIGNS[h.sign].glyph}${VS} ${SIGNS[h.sign].name}`],["Group",GROUPS[h.n]+(h.mystical?" · Mystical":"")],["Part of the wheel",h.band],["Opposite house",`${ordOf(h.n)} (${HOUSES[oppHouse(h.n)].sign!==undefined?SIGNS[HOUSES[oppHouse(h.n)].sign].name:''})`],...(h.angle?[["Angle",h.angle]]:[])])}
       ${block("What it covers", `<div class="chips">${chips(h.chips,true)}</div>`)}
       ${block("In my chart", `<p class="lifelesson">${h.mine}</p>`)}
-      ${h.class?block("Taught in class", `<p class="lifelesson">${h.class}</p>`):''}
-      ${block("Group and band", bullets([GROUPNOTE[GROUPS[h.n]]].concat(h.mystical?["Mystical house: roots, death and rebirth, the unseen. The houses of endings (W)"]:[]).concat([BANDNOTE[h.band]])))}
-      <p class="note">Meanings from books until Level 2 (W, B, R). Each house carries a little of the flavor of the sign with its number.</p>`
+      ${h.class?block("Worth knowing", `<p class="lifelesson">${h.class}</p>`):''}
+      ${block("Group and band", bullets([GROUPNOTE[GROUPS[h.n]]].concat(h.mystical?["Mystical house: roots, death and rebirth, the unseen. The houses of endings"]:[]).concat([BANDNOTE[h.band]])))}
+      <p class="note">Basic meanings. Each house carries a little of the flavor of the sign with its number.</p>`
   },
   modes:{ label:"Modes", items:MODES, plural:"mode",
     color:()=>ELCOLOR.Gold,
