@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Zodiac Study Cards</title>
+<title>Astrology Study Cards</title>
 </head>
 <body>
 
@@ -127,11 +127,33 @@ h1,h2,h3{font-family:var(--font-display);font-weight:600;text-wrap:balance;margi
 .ev-col ul{margin:0;padding-left:1.1em;font-size:.82rem;line-height:1.5}
 .ev-col li{margin-bottom:3px}
 
+
+/* deck switcher and shared pieces for planets, elements, and modes */
+.decks{display:flex;gap:6px;padding:4px;background:var(--surface);border:1px solid var(--border);border-radius:14px}
+.decks button{flex:1;min-height:44px;border:0;border-radius:10px;background:transparent;color:var(--fg-dim);font-family:var(--font-body);font-size:.92rem;font-weight:600;cursor:pointer}
+.decks button[aria-pressed="true"]{background:var(--surface-2);color:var(--fg);box-shadow:inset 0 0 0 1.5px var(--gold)}
+.decks button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.rail button.small{font-size:.7rem;font-weight:600;font-family:var(--font-mono)}
+.rail button svg{display:block}
+.front .glyph svg{width:1em;height:1em;display:block}
+.front .glyph .pair{display:inline-flex;align-items:center;gap:.12em}
+.front .glyph .plus{font-size:.4em;color:var(--fg-dim);font-family:var(--font-mono)}
+.front .glyph .signrow{font-size:.42em;letter-spacing:.18em;white-space:nowrap}
+.back .bhead .g .pair{display:inline-flex;align-items:center;gap:4px}
+.back .bhead .g .plus{font-size:.8rem;color:var(--fg-dim)}
+.back .bhead .g .signrow{font-size:1.1rem;letter-spacing:.12em}
+.ev-col.plain{border-left:3px solid var(--elcolor,var(--gold))}
+.facts div.v .trad,.note{color:var(--fg-dim)}
+.note{margin:12px 0 0;font-size:.74rem;font-style:italic;line-height:1.5}
+.trad{font-size:.74rem}
+
 @media (prefers-reduced-motion: reduce){ .card{transition:none} .rail button{transition:none} }
 </style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 
 <div class="wrap">
+  <nav class="decks" id="decks" aria-label="Choose a deck"></nav>
+
   <div class="card-outer">
     <div class="card" id="card" tabindex="0" role="button" aria-label="Flip card">
       <div class="face front" id="front"></div>
@@ -140,14 +162,14 @@ h1,h2,h3{font-family:var(--font-display);font-weight:600;text-wrap:balance;margi
   </div>
 
   <div class="controls">
-    <button class="navbtn" id="prevBtn" aria-label="Previous sign"><span class="arrow">&#8592;</span> Prev</button>
+    <button class="navbtn" id="prevBtn" aria-label="Previous card"><span class="arrow">&#8592;</span> Prev</button>
     <div class="counter" id="counter"></div>
-    <button class="navbtn" id="nextBtn" aria-label="Next sign">Next <span class="arrow">&#8594;</span></button>
+    <button class="navbtn" id="nextBtn" aria-label="Next card">Next <span class="arrow">&#8594;</span></button>
   </div>
 
-  <nav class="rail" id="rail" aria-label="Jump to sign"></nav>
+  <nav class="rail" id="rail" aria-label="Jump to card"></nav>
 
-  <p class="src">Sources: <em>The Only Astrology Book You'll Ever Need</em> (Woolfolk) &amp; Debra Silverman's Level 1 coursebook</p>
+  <p class="src">Sources: Debra Silverman’s Level 1 coursebook and lectures, plus <em>The Only Astrology Book You'll Ever Need</em> (Woolfolk)</p>
 </div>
 
 <script>
@@ -156,7 +178,7 @@ const SIGNS = [
   tagline:"Initiates. Acts before it thinks things through.",
   signQ:["Initiating","Direct","Competitive","Impulsive","Courageous"],
   houseQ:["Identity","Self-image","First impressions","Initiative"],
-  planetQ:["Drive","Action","Desire","Assertion"],
+  planetQ:["Drive","Action","Energy","Assertion"],
   evolved:["Leads with courage, not force","Acts fast without needing to fight","Turns anger into clean, direct honesty","Inspires others to move"],
   unevolved:["Impulsive to the point of reckless","Picks fights to feel alive","Starts more than it finishes","Turns everything into a competition"],
   lifeLesson:"Temper the drive to win with patience for other people, and learn when a fight is actually finished."},
@@ -168,7 +190,7 @@ const SIGNS = [
   evolved:["Builds lasting security, patiently","Enjoys pleasure without guilt","A steady presence others lean on","Loves itself exactly as it is"],
   unevolved:["Stubborn to the point of immovable","Possessive of people and things","Measures worth by what it owns","Resists change even when it helps"],
   lifeLesson:"Slowing down and being content with enough isn't settling. Let go before holding on turns into stuck."},
-{name:"Gemini",glyph:"♊",symbol:"The Twins",element:"Air",mode:"Mutable",ruler:"Mercury",rulerGlyph:"☿",house:"3rd House",duality:"Masculine",polarity:"Sagittarius",body:"Hands, arms, lungs",dates:"May 21 – Jun 20",
+{name:"Gemini",glyph:"♊",symbol:"The Twins",element:"Air",mode:"Mutable",ruler:"Mercury",rulerGlyph:"☿",house:"3rd House",duality:"Masculine",polarity:"Sagittarius",body:"Lungs, arms, hands, fingers",dates:"May 21 – Jun 20",
   tagline:"Connects. Gathers information, talks it through.",
   signQ:["Curious","Talkative","Adaptable","Witty","Scattered"],
   houseQ:["Communication","Siblings","Local environment","Learning"],
@@ -176,7 +198,7 @@ const SIGNS = [
   evolved:["Connects ideas and people with ease","Genuinely curious, genuinely listens","Adapts without losing the thread","Makes complex things simple"],
   unevolved:["Scattered, starts everything, finishes little","Talks past people instead of with them","Says what's easy, not what's true","Flighty when things get serious"],
   lifeLesson:"Quiet the mind long enough to actually feel something before talking about it."},
-{name:"Cancer",glyph:"♋",symbol:"The Crab",element:"Water",mode:"Cardinal",ruler:"Moon",rulerGlyph:"☽",house:"4th House",duality:"Feminine",polarity:"Capricorn",body:"Chest, stomach",dates:"Jun 21 – Jul 22",
+{name:"Cancer",glyph:"♋",symbol:"The Crab",element:"Water",mode:"Cardinal",ruler:"Moon",rulerGlyph:"☽",house:"4th House",duality:"Feminine",polarity:"Capricorn",body:"Chest, stomach, breasts",dates:"Jun 21 – Jul 22",
   tagline:"Protects. Feels first, decides from there.",
   signQ:["Nurturing","Protective","Moody","Intuitive","Loyal"],
   houseQ:["Home","Family","Roots","Emotional foundation"],
@@ -184,7 +206,7 @@ const SIGNS = [
   evolved:["Creates real emotional safety","Nurtures without smothering","Honors the past without being ruled by it","Protects fiercely, forgives fully"],
   unevolved:["Moody, clings then withdraws","Uses guilt to keep people close","Never really forgives, just goes quiet","Takes everything personally"],
   lifeLesson:"Let feelings move all the way through instead of turning them into grudges or guilt trips."},
-{name:"Leo",glyph:"♌",symbol:"The Lion",element:"Fire",mode:"Fixed",ruler:"Sun",rulerGlyph:"☉",house:"5th House",duality:"Masculine",polarity:"Aquarius",body:"Heart, spine",dates:"Jul 23 – Aug 22",
+{name:"Leo",glyph:"♌",symbol:"The Lion",element:"Fire",mode:"Fixed",ruler:"Sun",rulerGlyph:"☉",house:"5th House",duality:"Masculine",polarity:"Aquarius",body:"Heart, spine, back",dates:"Jul 23 – Aug 22",
   tagline:"Expresses. Wants to be seen and to matter.",
   signQ:["Warm","Expressive","Proud","Generous","Dramatic"],
   houseQ:["Creativity","Romance","Children","Self-expression"],
@@ -192,7 +214,7 @@ const SIGNS = [
   evolved:["Leads with warmth, not ego","Shines without needing to eclipse others","Loyal once trust is earned","Turns the need for attention into real creativity"],
   unevolved:["Needs constant admiration to feel secure","Grandiose, can't stand being upstaged","Sulks or rages when ignored","Confuses being loved with being praised"],
   lifeLesson:"Real recognition means sharing the stage. Vulnerability, not performance, is the actual strength."},
-{name:"Virgo",glyph:"♍",symbol:"The Virgin",element:"Earth",mode:"Mutable",ruler:"Mercury",rulerGlyph:"☿",house:"6th House",duality:"Feminine",polarity:"Pisces",body:"Digestive system",dates:"Aug 23 – Sep 22",
+{name:"Virgo",glyph:"♍",symbol:"The Virgin",element:"Earth",mode:"Mutable",ruler:"Mercury",rulerGlyph:"☿",house:"6th House",duality:"Feminine",polarity:"Pisces",body:"Intestines, digestive system",dates:"Aug 23 – Sep 22",
   tagline:"Refines. Notices what's wrong and fixes it.",
   signQ:["Analytical","Meticulous","Humble","Practical","Self-critical"],
   houseQ:["Work","Routine","Health","Service"],
@@ -200,7 +222,7 @@ const SIGNS = [
   evolved:["Turns discernment into real service","Improves systems without demanding perfection","Humble mastery, quiet competence","Notices what helps, not just what's wrong"],
   unevolved:["Self-critical to the point of paralysis","Nitpicks others to avoid its own flaws","Mistakes being useful for being worthy","Can't relax until everything is right"],
   lifeLesson:"Trade harsh judgment for genuine service, and let a little faith fill in where logic runs out."},
-{name:"Libra",glyph:"♎",symbol:"The Scales",element:"Air",mode:"Cardinal",ruler:"Venus",rulerGlyph:"♀",house:"7th House",duality:"Masculine",polarity:"Aries",body:"Kidneys, lower back",dates:"Sep 23 – Oct 22",
+{name:"Libra",glyph:"♎",symbol:"The Scales",element:"Air",mode:"Cardinal",ruler:"Venus",rulerGlyph:"♀",house:"7th House",duality:"Masculine",polarity:"Aries",body:"Kidneys, bladder, lower back",dates:"Sep 23 – Oct 22",
   tagline:"Balances. Decides by weighing the other side.",
   signQ:["Diplomatic","Charming","Fair-minded","Indecisive","Relational"],
   houseQ:["Partnership","Marriage","One-to-one bonds"],
@@ -208,7 +230,7 @@ const SIGNS = [
   evolved:["Builds real fairness, not just appearances","Diplomatic without abandoning itself","Brings out the best in a partnership","Weighs both sides, then actually decides"],
   unevolved:["Avoids conflict until resentment builds","People-pleases at its own expense","Indecisive, afraid to disappoint anyone","Chooses peace over truth"],
   lifeLesson:"Turn some of that famous fairness inward, and choose for yourself before you weigh everyone else's side."},
-{name:"Scorpio",glyph:"♏",symbol:"The Scorpion",element:"Water",mode:"Fixed",ruler:"Pluto",rulerGlyph:"♇",house:"8th House",duality:"Feminine",polarity:"Taurus",body:"Reproductive system",dates:"Oct 23 – Nov 21",
+{name:"Scorpio",glyph:"♏",symbol:"The Scorpion",element:"Water",mode:"Fixed",ruler:"Pluto",trad:"Mars",rulerGlyph:"♇",house:"8th House",duality:"Feminine",polarity:"Taurus",body:"Reproductive system",dates:"Oct 23 – Nov 21",
   tagline:"Transforms. Goes to the root, holds nothing lightly.",
   signQ:["Intense","Magnetic","Secretive","Transformative","Loyal"],
   houseQ:["Shared resources","Intimacy","Transformation"],
@@ -224,7 +246,7 @@ const SIGNS = [
   evolved:["Honest optimism that lifts others up","Turns restlessness into real growth","Teaches what it's learned, generously","Sees the big picture clearly"],
   unevolved:["Blunt to the point of careless","Promises more than it delivers","Calls commitment a cage and runs","Preachy, certain its truth is the only one"],
   lifeLesson:"Moderation. Truth-telling still needs tact, and an open mind cuts both ways."},
-{name:"Capricorn",glyph:"♑",symbol:"The Sea-Goat",element:"Earth",mode:"Cardinal",ruler:"Saturn",rulerGlyph:"♄",house:"10th House",duality:"Feminine",polarity:"Cancer",body:"Bones, knees, skin",dates:"Dec 22 – Jan 19",
+{name:"Capricorn",glyph:"♑",symbol:"The Sea-Goat (mountain goat)",element:"Earth",mode:"Cardinal",ruler:"Saturn",rulerGlyph:"♄",house:"10th House",duality:"Feminine",polarity:"Cancer",body:"Knees, bones, teeth, skin",dates:"Dec 22 – Jan 19",
   tagline:"Builds structure. Earns things the long way.",
   signQ:["Disciplined","Ambitious","Reserved","Responsible","Patient"],
   houseQ:["Career","Reputation","Public standing"],
@@ -232,7 +254,7 @@ const SIGNS = [
   evolved:["Disciplined leadership that earns trust","Builds things that actually last","Responsible without martyrdom","Patient, plays the long game well"],
   unevolved:["Workaholic, worth tied to achievement","Controlling, distrusts others' competence","Withholds warmth until it feels earned","All work, no permission to rest"],
   lifeLesson:"Humility. Being useful doesn't require carrying it alone, and rest doesn't have to be earned."},
-{name:"Aquarius",glyph:"♒",symbol:"The Water Bearer",element:"Air",mode:"Fixed",ruler:"Uranus",rulerGlyph:"⛢",house:"11th House",duality:"Masculine",polarity:"Leo",body:"Circulation, ankles",dates:"Jan 20 – Feb 18",
+{name:"Aquarius",glyph:"♒",symbol:"The Water Bearer",element:"Air",mode:"Fixed",ruler:"Uranus",trad:"Saturn",rulerGlyph:"⛢",house:"11th House",duality:"Masculine",polarity:"Leo",body:"Ankles, calves, circulation",dates:"Jan 20 – Feb 18",
   tagline:"Detaches to see the system. Serves the group over the self.",
   signQ:["Independent","Inventive","Detached","Humanitarian","Unconventional"],
   houseQ:["Friends","Community","Hopes and goals"],
@@ -240,7 +262,7 @@ const SIGNS = [
   evolved:["Visionary who serves the collective","Loyal in its own unconventional way","Welcomes feedback instead of digging in","Individual without needing to isolate"],
   unevolved:["Detached to the point of cold","Rebels for its own sake","So committed to different it won't compromise","Intellectualizes feeling instead of having it"],
   lifeLesson:"Accept your own eccentricity before asking the world to accept it. Being yourself doesn't require a cause."},
-{name:"Pisces",glyph:"♓",symbol:"The Fish",element:"Water",mode:"Mutable",ruler:"Neptune",rulerGlyph:"♆",house:"12th House",duality:"Feminine",polarity:"Virgo",body:"Feet",dates:"Feb 19 – Mar 20",
+{name:"Pisces",glyph:"♓",symbol:"The Fish",element:"Water",mode:"Mutable",ruler:"Neptune",trad:"Jupiter",rulerGlyph:"♆",house:"12th House",duality:"Feminine",polarity:"Virgo",body:"Feet",dates:"Feb 19 – Mar 20",
   tagline:"Dissolves boundaries. Feels what isn't spoken.",
   signQ:["Empathic","Dreamy","Elusive","Compassionate","Imaginative"],
   houseQ:["The unconscious","Solitude","Endings","Hidden strengths"],
@@ -249,99 +271,272 @@ const SIGNS = [
   unevolved:["Escapist, blurs its own boundaries","Plays the martyr or the victim","Avoids hard truths by disappearing","Absorbs everyone else's feelings as its own"],
   lifeLesson:"Set real boundaries so compassion doesn't turn into self-erasure. Responsibility, not escape."},
 ];
-const ELCOLOR = {Fire:"var(--fire)", Earth:"var(--earth)", Air:"var(--air)", Water:"var(--water)"};
+const ELCOLOR = {Fire:"var(--fire)", Earth:"var(--earth)", Air:"var(--air)", Water:"var(--water)", Gold:"var(--gold)"};
+const VS = '︎';
 
-let idx = 0;
-let flipped = false;
+/* ---------- PLANETS (coursebook pp. 81-82, Debra's lectures, 10/20 review) ---------- */
+const PLANETS = [
+{name:"Sun",glyph:"☉",kw:"Life force · Personality · Self-expression",tagline:"Your personality and ego. The part that wants to be seen.",
+  rules:"Leo",house:"5th House",said:"I will (Leo)",exalted:"Aries",detriment:"Aquarius",fall:"Libra",
+  chips:["Life force","Personality","Self-expression","Energy","Male energy"],
+  quote:"The Sun is your personality, your ego.",
+  points:["The Sun sign is the ego side: the knee-jerk way you enter the world, the part that wants approval and to be seen","The Sun’s house is the theme of the whole chart","Sun and Moon in the same sign is a new moon signature. In opposite signs it is a full moon signature"]},
+{name:"Moon",glyph:"☽",kw:"Needs · Emotions · Temperament · Intuition",tagline:"Your inner world and emotional body. How you respond under stress.",
+  rules:"Cancer",house:"4th House",said:"I feel (Cancer)",exalted:"Taurus",detriment:"Capricorn",fall:"Scorpio",
+  chips:["Emotional temperament","Intuition","Female energy","Habits and needs"],
+  quote:"How you respond when something is painful.",
+  points:["Water Moon: sensitive, retreats and goes nonverbal","Air Moon: needs to talk it out","Earth Moon: wants a list and a practical plan","Fire Moon: snaps first, apologizes after","None of the four is right or wrong"]},
+{name:"Mercury",glyph:"☿",kw:"Communication · Intellect · Mind · Speed",tagline:"How your thoughts operate, often apart from your emotions.",
+  rules:"Gemini, Virgo",house:"3rd and 6th House",said:"I think (Gemini), I analyze (Virgo)",exalted:"Aquarius",detriment:"Sagittarius, Pisces",fall:"Pisces",
+  chips:["Intellect","Communication","The way you think and learn"],
+  quote:"Find your Mercury to catch the inner voice and notice your internal dialogue.",
+  points:["Mercury rules two signs, Gemini and Virgo","The observer is Debra’s tool for Mercury: step back and watch the thought"],
+  note:"DSA teaches Mercury exalted in Aquarius. Traditionally it is Virgo."},
+{name:"Venus",glyph:"♀",kw:"Values · Desires · Pleasure · Softness",tagline:"How and what you love. What you are attracted to.",
+  rules:"Taurus, Libra",house:"2nd and 7th House",said:"I have (Taurus), I balance (Libra)",exalted:"Pisces",detriment:"Scorpio, Aries",fall:"Virgo",
+  chips:["Values and desires","Attraction","Pleasure","Beauty and art"],
+  quote:"How you want to be in a relationship, and it varies by element.",
+  points:["Water: all romance","Earth: practical, reliable, consistent","Fire: dramatic and physically active","Air: an intellectual who gives you words","Venus rules two signs, Taurus and Libra"]},
+{name:"Mars",glyph:"♂",kw:"Assertiveness · Energy · Thrust · Drive",tagline:"The warrior. How you spend your energy and take action.",
+  rules:"Aries (Scorpio traditionally)",house:"1st House",said:"I am (Aries)",exalted:"Capricorn",detriment:"Libra, Taurus",fall:"Cancer",
+  chips:["Expenditure of energy","Assertiveness","Drive and action","Male energy"],
+  quote:"It’s red, it’s initiative, it’s Martian, it’s the warrior.",
+  points:["Male energy in everyone, whatever the gender","The part that defends, protects, and provides","Water asserts by helping, air by words, earth by getting it done, fire by physical action","Mars in Capricorn is the mountain climber"]},
+{name:"Jupiter",glyph:"♃",kw:"Ease · Expansion · Growth · Excess",tagline:"More. Joy, luck, and permission to enjoy.",
+  rules:"Sagittarius (Pisces traditionally)",house:"9th House",said:"I seek, I see (Sagittarius)",exalted:"Cancer (coursebook table)",detriment:"Gemini, Virgo",fall:"Capricorn",
+  chips:["Expansion","What you enjoy most","Luck","Ease","Magnifies"],
+  quote:"Santa Claus energy. Jupiter is just a party waiting to happen.",
+  points:["Its keyword is more: more food, play, spending, travel","Also about truth-telling and bluntness","A diet that never lets you eat is Saturn, not Jupiter","Red lines to Jupiter on a chart can mean restricted access to joy"],
+  note:"Debra’s lectures say Jupiter is exalted in Pisces. The coursebook table says Cancer. Still open."},
+{name:"Saturn",glyph:"♄",kw:"Adult · Life lessons · Maturity · Restrictions · Responsibility",tagline:"The promise you made before you arrived. The lesson you can’t skip.",
+  rules:"Capricorn (Aquarius traditionally)",house:"10th House",said:"I use (Capricorn)",exalted:"Libra",detriment:"Cancer, Leo",fall:"Aries",
+  chips:["Life lessons","Destiny","Discipline","Limits","Responsibility","Maturity"],
+  quote:"Silverman and Saturn are BFFs.",
+  points:["The most important planet in Debra’s system","Saturn knocks. Ignore it and it knocks the door down","Seven-year markers: ages 7, 14, 21, then the first return at about 28 to 30","Transiting Saturn in the same mode as natal Saturn means a Saturn cycle is active","Nothing to fear: it supports the path to mastery and wisdom"]},
+{name:"Uranus",glyph:"⛢",kw:"Freedom · Changes · Chaos · Genius · Eccentricity",tagline:"Breaks the pattern. The unexpected and the genius.",
+  rules:"Aquarius (Saturn traditionally)",house:"11th House",said:"I know (Aquarius)",exalted:"Not listed",detriment:"Leo",fall:"Not listed",
+  chips:["Freedom","Changes","Chaos, the unexpected","Genius","Eccentricity"],
+  quote:"The 11th house is community, society, progress, the internet.",
+  points:["Uranus is one of the three planets ancient astrologers did not know","Aquarius life lesson: accept your eccentricity"]},
+{name:"Neptune",glyph:"♆",kw:"Universal love · Dreams · Illusions · Intuition",tagline:"Dissolves boundaries. The mystic and the dreamer.",
+  rules:"Pisces (Jupiter traditionally)",house:"12th House",said:"I dream, I believe (Pisces)",exalted:"Not listed",detriment:"Virgo",fall:"Not listed",
+  chips:["Dreams and illusions","Idealism","Mystic and magician","Universal love","Intuition"],
+  quote:"The 12th house is subtle energy, spirit, the hidden, aloneness.",
+  points:["Pisces life lesson: establish boundaries","Low road is escapism and gullibility, high road is creative, psychic, trusting"]},
+{name:"Pluto",glyph:"♇",kw:"Transformation · Unconscious · Trauma · Power",tagline:"Goes to the root. Power that can go both ways.",
+  rules:"Scorpio (Mars traditionally)",house:"8th House",said:"I desire (Scorpio)",exalted:"Not listed",detriment:"Taurus",fall:"Not listed",
+  chips:["Transformation","The unconscious","Trauma","Power"],
+  quote:"P stands for presence. Pluto stands for power, and it can go both ways.",
+  points:["Strong Pluto people won’t budge: settled clarity about what they want","The 8th house is transformation, trust, intimacy, taxes","Scorpio life lesson: letting go of control is safe"]}
+];
 
+/* ---------- ELEMENTS (coursebook pp. 78-79, 9/15 class, 10/20 review) ---------- */
+const ELEMENTS = [
+{kind:"el",name:"Fire",signs:"Aries · Leo · Sagittarius",nums:"1, 5, 9",tagline:"Enthusiastic, impulsive, inspirational.",
+  pace:"Yang, masculine, fast. Day energy",body:"Energetic body: boldness, courage, fun, vitality, independence",pairs:"Air (air feeds the fire)",color:"Red on astro.com",
+  chips:["Enthusiastic","Impulsive","Inspirational","Humor","Drama","Fun"],
+  high:["Courageous","Inspirational","Passionate","Bold","Direct"],low:["Anger and temper","Burns","Over the top"],
+  ask:"Can you push yourself to honesty, physical challenges, and starting something new? Do you give yourself the right to your joy and passion?",
+  moon:"Fire Moon snaps first, then apologizes."},
+{kind:"el",name:"Earth",signs:"Taurus · Virgo · Capricorn",nums:"2, 6, 10",tagline:"Practical, a fix-it energy, goal oriented.",
+  pace:"Yin, feminine, slow. Night energy",body:"Physical plane: health, embodiment, money, work, slowing down",pairs:"Water (water on earth makes fertile mud)",color:"Green on astro.com",
+  chips:["Practical","Fix-it","Goal oriented","Service","Dependable","Loners"],
+  high:["Grounded","Methodical"],low:["Judgmental","High standards and dutiful","Chronic “not enoughness”","Money anxiety"],
+  ask:"Can you follow through to manifestation? Do you care for your body, health, and diet? Do you believe in abundance?",
+  moon:"Earth Moon wants a list and a practical plan."},
+{kind:"el",name:"Air",signs:"Gemini · Libra · Aquarius",nums:"3, 7, 11",tagline:"Independent, curious, a thinker.",
+  pace:"Yang, masculine, fast. Day energy",body:"Mental body: mind, communication, inner dialogue, relationship",pairs:"Fire (air feeds the fire)",color:"Yellow or orange on astro.com",
+  chips:["Independent","Freedom","Thinker","Curious","Talkative","Observant"],
+  high:["Open-minded","Communicative","Relational","Mental","Light"],low:["Forgetful","Detached from body and emotion","Needs space and freedom"],
+  ask:"Do your words match your truth, insights, and thoughts? Do you allow yourself the freedom to think for yourself?",
+  moon:"Air Moon needs to talk it out."},
+{kind:"el",name:"Water",signs:"Cancer · Scorpio · Pisces",nums:"4, 8, 12",tagline:"Intuitive, deep feeling, private.",
+  pace:"Yin, feminine, slow. Night energy",body:"Emotional body: managing emotions, self-care, softening (water can freeze)",pairs:"Earth (water on earth makes fertile mud)",color:"Blue on astro.com",
+  chips:["Intuitive","Deep feelings","Vibrational","Aware","Instinctual","Private","Secretive","Spiritual"],
+  high:["Caring","Nurturing","Deep","Reflective","Compassionate"],low:["No boundaries","Absorbs others’ energy","Overwhelm","Escapism and addiction","Can freeze"],
+  ask:"Can you allow your instinct, feelings, and intuition to flow? Can you rest in the quiet of solitude and silence?",
+  moon:"Water Moon is sensitive and retreats, going nonverbal."}
+].map(e=>Object.assign(e,{col:e.name}));
+
+const BLENDS = [
+{kind:"blend",a:"Fire",b:"Air",name:"Fire + Air",short:"F·A",kw:"Genius, creativity, insight, spontaneity, surprising, wild, unhinged, explosive, crazy, angry, violent",talent:"From idea to action in an instant",beware:"Being too impulsive, and temper control"},
+{kind:"blend",a:"Earth",b:"Water",name:"Earth + Water",short:"E·W",kw:"Loving, supportive, nourishing, giving, suffocating, resentful, sad, stuck, depressed, low self-esteem",talent:"Healing and care giving",beware:"Over-giving and not filling your own cup"},
+{kind:"blend",a:"Fire",b:"Earth",name:"Fire + Earth",short:"F·E",kw:"Manifestor, builder, doer, creator, visionary, innovator, can’t-stop, overworked, tired, angry, bossy, bully",talent:"Getting it done, doing it well",beware:"Forgetting emotional connections and burning out"},
+{kind:"blend",a:"Fire",b:"Water",name:"Fire + Water",short:"F·W",kw:"Intuitive, instinctive, original, raw, real, passionate, impulsive, unstable, moody",talent:"Turning your intuition to action",beware:"Spinning out of control"},
+{kind:"blend",a:"Air",b:"Water",name:"Air + Water",short:"A·W",kw:"Imagination, poetry, possibility, hopeful, kindness, lack of boundaries, indecisive, hesitant, wishy-washy, shy, scared",talent:"Putting words to abstract emotions",beware:"Getting lost in your head"},
+{kind:"blend",a:"Air",b:"Earth",name:"Air + Earth",short:"A·E",kw:"Intention, conviction, ideology, knowledge, facts, science, future, fear, anxiety, paranoia",talent:"Goal setting and planning for the future",beware:"Getting stuck in loops of anxiety"}
+];
+const ELDECK = ELEMENTS.concat(BLENDS);
+
+/* ---------- MODES (coursebook pp. 139-140, 10/20 review) ---------- */
+const MODES = [
+{name:"Cardinal",letter:"C",signs:"Aries · Cancer · Libra · Capricorn",glyphs:"♈♋♎♑",nums:"1, 4, 7, 10",season:"Starts the season (solstices and equinoxes)",
+  tagline:"Generates energy. Get up and go.",
+  chips:["Generates energy","Get up and go","Leader","Forceful","Authoritative","Active","Ambitious","Opportunistic"],
+  high:["Initiates and generates ideas","Forward momentum"],low:["Starts things, struggles to finish"],
+  says:["Aries: “I’m doing it by myself!”","Cancer: “I’ll do it for you.”","Libra: “Let’s do it together...”","Capricorn: “I’ll do it for everyone.”"]},
+{name:"Fixed",letter:"F",signs:"Taurus · Leo · Scorpio · Aquarius",glyphs:"♉♌♏♒",nums:"2, 5, 8, 11",season:"Sustains the middle of the season",
+  tagline:"Sustains energy. Holds down the fort.",
+  chips:["Sustains energy","Holds down the fort","Stubborn","Masterful","Determined","Purposeful","Persistent"],
+  high:["Holds the fort and matures things","Persistence and mastery"],low:["Resists change","Gets stuck"],
+  says:["Taurus: “I want to have it all.”","Leo: “I want to do it all!”","Scorpio: “I want to feel it all...”","Aquarius: “I want to free it all!”"],
+  extra:["Scorpio is fixed water: it digs into shadow work until the wound heals","Aquarius is fixed air: its first response can be no"]},
+{name:"Mutable",letter:"M",signs:"Gemini · Virgo · Sagittarius · Pisces",glyphs:"♊♍♐♓",nums:"3, 6, 9, 12",season:"Transfers energy at the end of the season",
+  tagline:"Transfers energy. Adapts and multitasks.",
+  chips:["Transfers energy","Multi-tasker","Scattered","Adaptable","Versatile","Personable","Easily influenced","Serving"],
+  high:["Adapts and moves with the flow","Responds to a changing environment"],low:["Scattered or overwhelmed","Shapeless, no container to ground it"],
+  says:["Gemini: “I have ideas and thoughts about everything!”","Virgo: “I want to fix everything and everyone.”","Sagittarius: “I want to experience and see everything!”","Pisces: “I feel everything and everyone...”"]}
+];
+
+/* ---------- helpers ---------- */
+function elSvg(el, px){
+  const up = (el==="Fire"||el==="Air"), bar = (el==="Air"||el==="Earth");
+  const tri = up ? "12,3 22,20 2,20" : "2,4 22,4 12,21";
+  const y = up ? 14 : 10;
+  return `<svg viewBox="0 0 24 24" width="${px||24}" height="${px||24}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><polygon points="${tri}"/>${bar?`<line x1="5.5" y1="${y}" x2="18.5" y2="${y}"/>`:''}</svg>`;
+}
+function chips(list, tag){ return list.map(x=>`<span class="chip${tag?' tag':''}">${x}</span>`).join(''); }
+function facts(rows){ return `<div class="facts">${rows.map(r=>`<div class="k">${r[0]}</div><div class="v">${r[1]}</div>`).join('')}</div>`; }
+function block(label, inner){ return `<div class="qual-block"><p class="label">${label}</p>${inner}</div>`; }
+function bhead(g, name, tag){ return `<div class="bhead"><span class="g">${g}</span><h3>${name}</h3><span class="em">${tag}</span></div>`; }
+function bullets(list){ return `<div class="ev-col plain"><ul>${list.map(x=>`<li>${x}</li>`).join('')}</ul></div>`; }
+function roads(hi, lo){ return `<p class="label">High road / low road</p><div class="ev-grid"><div class="ev-col good"><div class="t">High road</div><ul>${hi.map(x=>`<li>${x}</li>`).join('')}</ul></div><div class="ev-col bad"><div class="t">Low road</div><ul>${lo.map(x=>`<li>${x}</li>`).join('')}</ul></div></div>`; }
+function front(glyph, name, mono, tagline, extra){
+  return `${extra||''}<div class="glyph">${glyph}</div><h2>${name}</h2><div class="dates">${mono}</div><div class="tagline">${tagline}</div><div class="hint">Tap to flip · Swipe for next</div>`;
+}
+
+/* ---------- decks ---------- */
+const DECKS = {
+  signs:{ label:"Signs", items:SIGNS, plural:"sign",
+    color:s=>ELCOLOR[s.element],
+    rail:s=>({html:s.glyph+VS, title:s.name, color:ELCOLOR[s.element]}),
+    counter:s=>`${s.element} sign`,
+    front:s=>front(s.glyph+VS, s.name, s.dates, s.tagline, `<div class="housenum">${parseInt(s.house,10)}</div>`),
+    back:s=>`
+      ${bhead(s.glyph+VS, s.name, `${s.element} · ${s.mode}`)}
+      <p class="label">Correspondences</p>
+      ${facts([["Symbol",s.symbol],["Ruling planet",`${s.rulerGlyph}${VS} ${s.ruler}${s.trad?` <span class="trad">(trad. ${s.trad})</span>`:''}`],["Natural house",s.house],["Duality",s.duality],["Polarity",s.polarity],["Body ruled",s.body]])}
+      ${block("Qualities of the sign", `<div class="chips">${chips(s.signQ,true)}</div>`)}
+      ${block(`Qualities of the house (${s.house})`, `<div class="chips">${chips(s.houseQ)}</div>`)}
+      ${block(`Qualities of the planet (${s.ruler})`, `<div class="chips">${chips(s.planetQ)}</div>`)}
+      ${block("Life lesson", `<p class="lifelesson">${s.lifeLesson}</p>`)}
+      ${roads(s.evolved, s.unevolved)}`
+  },
+  planets:{ label:"Planets", items:PLANETS, plural:"planet",
+    color:()=>ELCOLOR.Gold,
+    rail:p=>({html:p.glyph+VS, title:p.name, color:ELCOLOR.Gold}),
+    counter:()=>"Planet",
+    front:p=>front(p.glyph+VS, p.name, p.kw, p.tagline),
+    back:p=>`
+      ${bhead(p.glyph+VS, p.name, "Planet")}
+      <p class="label">Correspondences</p>
+      ${facts([["Rules",p.rules],["Natural house",p.house],["Says",p.said],["Exalted in",p.exalted],["Detriment",p.detriment],["Fall",p.fall]])}
+      ${block("Keywords", `<div class="chips">${chips(p.chips,true)}</div>`)}
+      ${block("Course notes", `<p class="lifelesson">${p.quote}</p>`)}
+      ${block("Worth remembering", bullets(p.points))}
+      ${p.note?`<p class="note">${p.note}</p>`:''}`
+  },
+  elements:{ label:"Elements", items:ELDECK, plural:"card",
+    color:e=>e.kind==="el" ? ELCOLOR[e.name] : ELCOLOR.Gold,
+    rail:e=>e.kind==="el" ? {html:elSvg(e.name,22), title:e.name, color:ELCOLOR[e.name]} : {html:e.short, title:e.name, color:ELCOLOR.Gold, small:true},
+    counter:e=>e.kind==="el" ? "Element" : "Blend",
+    front:e=> e.kind==="el"
+      ? front(elSvg(e.name), e.name, e.signs, e.tagline)
+      : front(`<span class="pair">${elSvg(e.a)}<span class="plus">+</span>${elSvg(e.b)}</span>`, e.name, e.talent, "Talent and what to beware of."),
+    back:e=> e.kind==="el" ? `
+      ${bhead(elSvg(e.name,24), e.name, "Element")}
+      <p class="label">Correspondences</p>
+      ${facts([["Signs",e.signs],["Sign numbers",e.nums],["Energy",e.pace],["Pairs with",e.pairs],["Chart color",e.color],["Apart in the wheel","120°, every 4th sign"]])}
+      ${block("Base note", `<p class="lifelesson">${e.body}</p>`)}
+      ${block("Keywords", `<div class="chips">${chips(e.chips,true)}</div>`)}
+      ${roads(e.high, e.low)}
+      ${block("Ask yourself", `<p class="lifelesson">${e.ask}</p>`)}
+      ${block("In the Moon", `<p class="lifelesson">${e.moon}</p>`)}
+      <p class="note">Counting planets in a chart: 4 or 5 or more is dominant, 2 to 3 is balanced, 0 to 1 is a singleton (underdeveloped, or already mastered).</p>`
+    : `
+      ${bhead(`<span class="pair sm">${elSvg(e.a,20)}<span class="plus">+</span>${elSvg(e.b,20)}</span>`, e.name, "Blend")}
+      ${block("Keywords", `<p class="lifelesson">${e.kw}</p>`)}
+      ${block("Talent", `<p class="lifelesson">${e.talent}</p>`)}
+      ${block("Beware of", `<p class="lifelesson">${e.beware}</p>`)}`
+  },
+  modes:{ label:"Modes", items:MODES, plural:"mode",
+    color:()=>ELCOLOR.Gold,
+    rail:m=>({html:m.letter, title:m.name, color:ELCOLOR.Gold}),
+    counter:()=>"Mode",
+    front:m=>front(`<span class="signrow">${m.glyphs.split('').map(g=>g+VS).join(' ')}</span>`, m.name, m.signs, m.tagline),
+    back:m=>`
+      ${bhead(`<span class="signrow sm">${m.glyphs.split('').map(g=>g+VS).join(' ')}</span>`, m.name, "Mode")}
+      <p class="label">Correspondences</p>
+      ${facts([["Signs",m.signs],["Sign numbers",m.nums],["In the season",m.season],["Elements","One of each: fire, earth, air, water"],["Apart by","90° (squares)"]])}
+      ${block("Keywords", `<div class="chips">${chips(m.chips,true)}</div>`)}
+      ${roads(m.high, m.low)}
+      ${block("Conversations of the modes", bullets(m.says))}
+      ${m.extra?block("Worth remembering", bullets(m.extra)):''}
+      <p class="note">Say mode first, then element, such as “mutable air.” When transiting Saturn is in the same mode as natal Saturn, a Saturn cycle is active. A grand cross is four planets in one mode.</p>`
+  }
+};
+
+/* ---------- engine ---------- */
+let deckKey = "signs", idx = 0, flipped = false;
 const rail = document.getElementById('rail');
 const cardEl = document.getElementById('card');
 const frontEl = document.getElementById('front');
 const backEl = document.getElementById('back');
 const counterEl = document.getElementById('counter');
+const decksEl = document.getElementById('decks');
+const outerEl = document.querySelector('.card-outer');
+const cur = ()=> DECKS[deckKey];
+const total = ()=> cur().items.length;
 
-SIGNS.forEach((s,i)=>{
+try{ const saved = JSON.parse(localStorage.getItem('astroCards')||'null'); if(saved && DECKS[saved.deck]){ deckKey=saved.deck; idx=Math.min(saved.idx|0, DECKS[saved.deck].items.length-1); } }catch(e){}
+function save(){ try{ localStorage.setItem('astroCards', JSON.stringify({deck:deckKey, idx})); }catch(e){} }
+
+Object.keys(DECKS).forEach(k=>{
   const b = document.createElement('button');
-  b.textContent = s.glyph + '︎';
-  b.style.setProperty('--elcolor', ELCOLOR[s.element]);
-  b.title = s.name;
-  b.addEventListener('click', ()=>{ goTo(i, i>idx ? +1 : -1); });
-  rail.appendChild(b);
+  b.textContent = DECKS[k].label; b.dataset.deck = k;
+  b.addEventListener('click', ()=> setDeck(k));
+  decksEl.appendChild(b);
 });
 
-function chips(list, tag){
-  return list.map(x=>`<span class="chip${tag?' tag':''}">${x}</span>`).join('');
+function buildRail(){
+  rail.innerHTML = '';
+  cur().items.forEach((it,i)=>{
+    const r = cur().rail(it);
+    const b = document.createElement('button');
+    b.innerHTML = r.html; b.title = r.title; b.setAttribute('aria-label', r.title);
+    if(r.small) b.classList.add('small');
+    b.style.setProperty('--elcolor', r.color);
+    b.addEventListener('click', ()=>{ goTo(i, i>idx ? +1 : -1); });
+    rail.appendChild(b);
+  });
+}
+
+function setDeck(k){
+  if(k===deckKey || busy) return;
+  deckKey = k; idx = 0; flipped = false;
+  resetOuter(); buildRail(); render();
 }
 
 function render(){
-  const s = SIGNS[idx];
-  const col = ELCOLOR[s.element];
-  cardEl.style.setProperty('--elcolor', col);
+  const d = cur(), it = d.items[idx];
+  cardEl.style.setProperty('--elcolor', d.color(it));
   cardEl.classList.toggle('flipped', flipped);
-
-  frontEl.innerHTML = `
-    <div class="housenum">${parseInt(s.house, 10)}</div>
-    <div class="glyph">${s.glyph}︎</div>
-    <h2>${s.name}</h2>
-    <div class="dates">${s.dates}</div>
-    <div class="tagline">${s.tagline}</div>
-    <div class="hint">Tap to flip · Swipe for next</div>
-  `;
-
-  backEl.innerHTML = `
-    <div class="bhead">
-      <span class="g">${s.glyph}︎</span>
-      <h3>${s.name}</h3>
-      <span class="em">${s.element} · ${s.mode}</span>
-    </div>
-
-    <p class="label">Correspondences</p>
-    <div class="facts">
-      <div class="k">Symbol</div><div class="v">${s.symbol}</div>
-      <div class="k">Ruling planet</div><div class="v">${s.rulerGlyph}︎ ${s.ruler}</div>
-      <div class="k">Natural house</div><div class="v">${s.house}</div>
-      <div class="k">Duality</div><div class="v">${s.duality}</div>
-      <div class="k">Polarity</div><div class="v">${s.polarity}</div>
-      <div class="k">Body ruled</div><div class="v">${s.body}</div>
-    </div>
-
-    <div class="qual-block">
-      <p class="label">Qualities of the sign</p>
-      <div class="chips">${chips(s.signQ, true)}</div>
-    </div>
-    <div class="qual-block">
-      <p class="label">Qualities of the house (${s.house})</p>
-      <div class="chips">${chips(s.houseQ)}</div>
-    </div>
-    <div class="qual-block">
-      <p class="label">Qualities of the planet (${s.ruler})</p>
-      <div class="chips">${chips(s.planetQ)}</div>
-    </div>
-
-    <div class="qual-block">
-      <p class="label">Life lesson</p>
-      <p class="lifelesson">${s.lifeLesson}</p>
-    </div>
-
-    <p class="label">At its best / at lower capacity</p>
-    <div class="ev-grid">
-      <div class="ev-col good"><div class="t">Evolved</div><ul>${s.evolved.map(x=>`<li>${x}</li>`).join('')}</ul></div>
-      <div class="ev-col bad"><div class="t">Unevolved</div><ul>${s.unevolved.map(x=>`<li>${x}</li>`).join('')}</ul></div>
-    </div>
-  `;
-
+  frontEl.innerHTML = d.front(it);
+  backEl.innerHTML = d.back(it);
+  backEl.scrollTop = 0;
   [...rail.children].forEach((b,i)=> b.setAttribute('aria-current', i===idx ? 'true':'false'));
-  counterEl.textContent = `${idx+1} / ${SIGNS.length} — ${s.element} sign`;
-
+  [...decksEl.children].forEach(b=> b.setAttribute('aria-pressed', b.dataset.deck===deckKey ? 'true':'false'));
+  counterEl.textContent = `${idx+1} / ${total()} · ${d.counter(it)}`;
+  document.getElementById('prevBtn').setAttribute('aria-label', 'Previous '+d.plural);
+  document.getElementById('nextBtn').setAttribute('aria-label', 'Next '+d.plural);
+  save();
   sizeCard();
 }
 
 function sizeCard(){
   // Faces are absolutely positioned, so scrollHeight still reports full content
-  // height even while clipped. Grow the card to fit the taller face so nothing
-  // (like the evolved/unevolved section) gets cut off.
+  // height even while clipped. Grow the card to fit the taller face so nothing gets cut off.
   requestAnimationFrame(()=>{
-    // Base height scales with card width and viewport height, then grows if the back needs more.
     const w = cardEl.offsetWidth;
     const base = Math.round(Math.max(360, Math.min(w*1.15, window.innerHeight*0.62, 620)));
     cardEl.style.transition = 'none';
@@ -354,14 +549,10 @@ function sizeCard(){
     cardEl.style.transition = '';
   });
 }
-
 window.addEventListener('resize', sizeCard);
 
-const outerEl = document.querySelector('.card-outer');
-const N = SIGNS.length;
 const reduceMotion = ()=> window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 let busy = false, dragX = 0;
-
 function resetOuter(){ outerEl.style.transform=''; outerEl.style.opacity=''; dragX=0; }
 
 // dir = +1 slides the old card out to the left (next), -1 out to the right (previous).
@@ -380,8 +571,8 @@ async function goTo(newIdx, dir){
   outerEl.getAnimations().forEach(a=>a.cancel());
   busy = false;
 }
-const goNext = ()=> goTo((idx+1)%N, +1);
-const goPrev = ()=> goTo((idx-1+N)%N, -1);
+const goNext = ()=> goTo((idx+1)%total(), +1);
+const goPrev = ()=> goTo((idx-1+total())%total(), -1);
 
 // Swipe left = next card, swipe right = previous card. The card follows your finger. Tap still flips.
 let tx=0, ty=0, tt=0, swiped=false, dragging=false;
@@ -423,6 +614,7 @@ cardEl.addEventListener('keydown', (e)=>{
 document.getElementById('nextBtn').addEventListener('click', goNext);
 document.getElementById('prevBtn').addEventListener('click', goPrev);
 
+buildRail();
 render();
 </script>
 
