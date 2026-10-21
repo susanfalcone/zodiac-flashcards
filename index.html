@@ -393,18 +393,18 @@ const MODES = [
 /* ---------- HOUSES (Houses study sheet) ---------- */
 const HOUSES = [
 {kind:"intro",name:"How houses work",short:"All"},
-{n:1,ord:"1st",sign:0,title:"Self",line:"Body, looks, mannerisms, how others see you",chips:["Body","Looks","Mannerisms","How others see you","The lens for the chart"],band:"Personal",angle:"Rising (Ascendant) starts it",mine:"Neptune (Sagittarius)"},
-{n:2,ord:"2nd",sign:1,title:"Money and possessions",line:"Income, earning power, what you value, self-worth",chips:["Income","Earning power","What you value","Self-worth"],band:"Personal",mine:"Jupiter (Sagittarius)"},
-{n:3,ord:"3rd",sign:2,title:"Communication",line:"Thinking, speaking, writing, siblings, short trips",chips:["Thinking","Speaking","Writing","Siblings","Short trips"],band:"Personal",mine:"North Node (Capricorn)"},
-{n:4,ord:"4th",sign:3,title:"Home and roots",line:"Childhood home, family, heritage, real estate, safety",chips:["Childhood home","Family","Heritage","Real estate","Safety"],band:"Personal",angle:"IC starts it",mystical:true,mine:"Empty"},
-{n:5,ord:"5th",sign:4,title:"Creativity and joy",line:"Play, romance, children, the arts, the heart",chips:["Play","Romance","Children","The arts","The heart"],band:"Social",mine:"Moon (Pisces)"},
-{n:6,ord:"6th",sign:5,title:"Service and health",line:"Daily work, routines, diet, coworkers, state of health",chips:["Daily work","Routines","Diet","Coworkers","State of health"],band:"Social",mine:"Chiron (Aries)"},
-{n:7,ord:"7th",sign:6,title:"Partnership",line:"Marriage, business partners, contracts, open enemies",chips:["Marriage","Business partners","Contracts","Open enemies"],band:"Social",angle:"Descendant starts it",mine:"Empty"},
-{n:8,ord:"8th",sign:7,title:"Transformation",line:"Shared money, inheritance, intimacy, death, the occult",chips:["Shared money","Inheritance","Intimacy","Death","The occult"],band:"Social",mystical:true,mine:"Saturn (Gemini)"},
-{n:9,ord:"9th",sign:8,title:"Expansion",line:"Higher education, philosophy, religion, long travel, publishing",chips:["Higher education","Philosophy","Religion","Long travel","Publishing"],band:"Universal",mine:"Venus (Cancer)"},
-{n:10,ord:"10th",sign:9,title:"Career and reputation",line:"Profession, status, ambition, authority",chips:["Profession","Status","Ambition","Authority"],band:"Universal",angle:"Midheaven starts it",mine:"Sun, Mars (Virgo); Mercury (Leo). A stellium",class:"The house of responsibility, work, and leadership"},
-{n:11,ord:"11th",sign:10,title:"Friends and groups",line:"Long-term hopes and wishes, causes, community, ideals",chips:["Long-term hopes and wishes","Causes","Community","Ideals"],band:"Universal",mine:"Pluto (Libra)"},
-{n:12,ord:"12th",sign:11,title:"The hidden",line:"Subconscious, secrets, solitude, karma, self-undoing",chips:["Subconscious","Secrets","Solitude","Karma","Self-undoing"],band:"Universal",mystical:true,mine:"Uranus (Libra)"}
+{n:1,ord:"1st",sign:0,title:"Self",line:"Body, looks, mannerisms, how others see you",chips:["Body","Looks","Mannerisms","How others see you","The lens for the chart"],band:"Personal",angle:"Rising (Ascendant) starts it"},
+{n:2,ord:"2nd",sign:1,title:"Money and possessions",line:"Income, earning power, what you value, self-worth",chips:["Income","Earning power","What you value","Self-worth"],band:"Personal"},
+{n:3,ord:"3rd",sign:2,title:"Communication",line:"Thinking, speaking, writing, siblings, short trips",chips:["Thinking","Speaking","Writing","Siblings","Short trips"],band:"Personal"},
+{n:4,ord:"4th",sign:3,title:"Home and roots",line:"Childhood home, family, heritage, real estate, safety",chips:["Childhood home","Family","Heritage","Real estate","Safety"],band:"Personal",angle:"IC starts it",mystical:true},
+{n:5,ord:"5th",sign:4,title:"Creativity and joy",line:"Play, romance, children, the arts, the heart",chips:["Play","Romance","Children","The arts","The heart"],band:"Social"},
+{n:6,ord:"6th",sign:5,title:"Service and health",line:"Daily work, routines, diet, coworkers, state of health",chips:["Daily work","Routines","Diet","Coworkers","State of health"],band:"Social"},
+{n:7,ord:"7th",sign:6,title:"Partnership",line:"Marriage, business partners, contracts, open enemies",chips:["Marriage","Business partners","Contracts","Open enemies"],band:"Social",angle:"Descendant starts it"},
+{n:8,ord:"8th",sign:7,title:"Transformation",line:"Shared money, inheritance, intimacy, death, the occult",chips:["Shared money","Inheritance","Intimacy","Death","The occult"],band:"Social",mystical:true},
+{n:9,ord:"9th",sign:8,title:"Expansion",line:"Higher education, philosophy, religion, long travel, publishing",chips:["Higher education","Philosophy","Religion","Long travel","Publishing"],band:"Universal"},
+{n:10,ord:"10th",sign:9,title:"Career and reputation",line:"Profession, status, ambition, authority",chips:["Profession","Status","Ambition","Authority"],band:"Universal",angle:"Midheaven starts it",class:"The house of responsibility, work, and leadership"},
+{n:11,ord:"11th",sign:10,title:"Friends and groups",line:"Long-term hopes and wishes, causes, community, ideals",chips:["Long-term hopes and wishes","Causes","Community","Ideals"],band:"Universal"},
+{n:12,ord:"12th",sign:11,title:"The hidden",line:"Subconscious, secrets, solitude, karma, self-undoing",chips:["Subconscious","Secrets","Solitude","Karma","Self-undoing"],band:"Universal",mystical:true}
 ];
 const GROUPS = {1:"Angular",4:"Angular",7:"Angular",10:"Angular",2:"Succedent",5:"Succedent",8:"Succedent",11:"Succedent",3:"Cadent",6:"Cadent",9:"Cadent",12:"Cadent"};
 const GROUPNOTE = {Angular:"Cardinal houses. Prominence in the world",Succedent:"Fixed houses. Stability, willpower, fixity of purpose",Cadent:"Mutable houses. Mentally active, communicates ideas"};
@@ -503,7 +503,6 @@ const DECKS = {
       <p class="label">Correspondences</p>
       ${facts([["Title",h.title],["Matching sign",`${SIGNS[h.sign].glyph}${VS} ${SIGNS[h.sign].name}`],["Group",GROUPS[h.n]+(h.mystical?" · Mystical":"")],["Part of the wheel",h.band],["Opposite house",`${ordOf(h.n)} (${HOUSES[oppHouse(h.n)].sign!==undefined?SIGNS[HOUSES[oppHouse(h.n)].sign].name:''})`],...(h.angle?[["Angle",h.angle]]:[])])}
       ${block("What it covers", `<div class="chips">${chips(h.chips,true)}</div>`)}
-      ${block("In my chart", `<p class="lifelesson">${h.mine}</p>`)}
       ${h.class?block("Worth knowing", `<p class="lifelesson">${h.class}</p>`):''}
       ${block("Group and band", bullets([GROUPNOTE[GROUPS[h.n]]].concat(h.mystical?["Mystical house: roots, death and rebirth, the unseen. The houses of endings"]:[]).concat([BANDNOTE[h.band]])))}
       <p class="note">Basic meanings. Each house carries a little of the flavor of the sign with its number.</p>`
