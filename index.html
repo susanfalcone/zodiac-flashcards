@@ -130,13 +130,14 @@ h1,h2,h3{font-family:var(--font-display);font-weight:600;text-wrap:balance;margi
 
 /* deck switcher and shared pieces for planets, elements, and modes */
 .decks{display:flex;gap:6px;padding:4px;background:var(--surface);border:1px solid var(--border);border-radius:14px}
-.decks button{flex:1;min-height:44px;border:0;border-radius:10px;background:transparent;color:var(--fg-dim);font-family:var(--font-body);font-size:.92rem;font-weight:600;cursor:pointer}
+.decks button{flex:1;min-height:44px;border:0;border-radius:10px;background:transparent;color:var(--fg-dim);font-family:var(--font-body);font-size:.8rem;font-weight:600;cursor:pointer;padding:0 2px}
 .decks button[aria-pressed="true"]{background:var(--surface-2);color:var(--fg);box-shadow:inset 0 0 0 1.5px var(--gold)}
 .decks button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 .rail button.small{font-size:.7rem;font-weight:600;font-family:var(--font-mono)}
 .rail button svg{display:block}
 .front .glyph svg{width:1em;height:1em;display:block}
 .front .glyph .pair{display:inline-flex;align-items:center;gap:.12em}
+.front .glyph.num{font-family:var(--font-display);font-weight:600;font-size:clamp(4.5rem,30cqi,9rem)}
 .front .glyph .plus{font-size:.4em;color:var(--fg-dim);font-family:var(--font-mono)}
 .front .glyph .signrow{font-size:.42em;letter-spacing:.18em;white-space:nowrap}
 .back .bhead .g .pair{display:inline-flex;align-items:center;gap:4px}
@@ -388,6 +389,29 @@ const MODES = [
   says:["Gemini: “I have ideas and thoughts about everything!”","Virgo: “I want to fix everything and everyone.”","Sagittarius: “I want to experience and see everything!”","Pisces: “I feel everything and everyone...”"]}
 ];
 
+
+/* ---------- HOUSES (Houses: the Stage sheet; W Woolfolk, B Bloch, R Racioppi, coursebook pp.144-145, classes 10/1, 10/6, 10/13) ---------- */
+const HOUSES = [
+{kind:"intro",name:"How houses work",short:"All"},
+{n:1,ord:"1st",sign:0,title:"Self",line:"Body, looks, mannerisms, how others see you",chips:["Body","Looks","Mannerisms","How others see you","The lens for the chart"],band:"Personal",angle:"Rising (Ascendant) starts it",mine:"Neptune (Sagittarius)"},
+{n:2,ord:"2nd",sign:1,title:"Money and possessions",line:"Income, earning power, what you value, self-worth",chips:["Income","Earning power","What you value","Self-worth"],band:"Personal",mine:"Jupiter (Sagittarius)"},
+{n:3,ord:"3rd",sign:2,title:"Communication",line:"Thinking, speaking, writing, siblings, short trips",chips:["Thinking","Speaking","Writing","Siblings","Short trips"],band:"Personal",mine:"North Node (Capricorn)"},
+{n:4,ord:"4th",sign:3,title:"Home and roots",line:"Childhood home, family, heritage, real estate, safety",chips:["Childhood home","Family","Heritage","Real estate","Safety"],band:"Personal",angle:"IC starts it",mystical:true,mine:"Empty"},
+{n:5,ord:"5th",sign:4,title:"Creativity and joy",line:"Play, romance, children, the arts, the heart",chips:["Play","Romance","Children","The arts","The heart"],band:"Social",mine:"Moon (Pisces)"},
+{n:6,ord:"6th",sign:5,title:"Service and health",line:"Daily work, routines, diet, coworkers, state of health",chips:["Daily work","Routines","Diet","Coworkers","State of health"],band:"Social",mine:"Chiron (Aries)"},
+{n:7,ord:"7th",sign:6,title:"Partnership",line:"Marriage, business partners, contracts, open enemies",chips:["Marriage","Business partners","Contracts","Open enemies"],band:"Social",angle:"Descendant starts it",mine:"Empty"},
+{n:8,ord:"8th",sign:7,title:"Transformation",line:"Shared money, inheritance, intimacy, death, the occult",chips:["Shared money","Inheritance","Intimacy","Death","The occult"],band:"Social",mystical:true,mine:"Saturn (Gemini)"},
+{n:9,ord:"9th",sign:8,title:"Expansion",line:"Higher education, philosophy, religion, long travel, publishing",chips:["Higher education","Philosophy","Religion","Long travel","Publishing"],band:"Universal",mine:"Venus (Cancer)"},
+{n:10,ord:"10th",sign:9,title:"Career and reputation",line:"Profession, status, ambition, authority",chips:["Profession","Status","Ambition","Authority"],band:"Universal",angle:"Midheaven starts it",mine:"Sun, Mars (Virgo); Mercury (Leo). A stellium",class:"The house of responsibility, work, and leadership (Jillian)"},
+{n:11,ord:"11th",sign:10,title:"Friends and groups",line:"Long-term hopes and wishes, causes, community, ideals",chips:["Long-term hopes and wishes","Causes","Community","Ideals"],band:"Universal",mine:"Pluto (Libra)"},
+{n:12,ord:"12th",sign:11,title:"The hidden",line:"Subconscious, secrets, solitude, karma, self-undoing",chips:["Subconscious","Secrets","Solitude","Karma","Self-undoing"],band:"Universal",mystical:true,mine:"Uranus (Libra)"}
+];
+const GROUPS = {1:"Angular",4:"Angular",7:"Angular",10:"Angular",2:"Succedent",5:"Succedent",8:"Succedent",11:"Succedent",3:"Cadent",6:"Cadent",9:"Cadent",12:"Cadent"};
+const GROUPNOTE = {Angular:"Cardinal houses. Prominence in the world (W)",Succedent:"Fixed houses. Stability, willpower, fixity of purpose (W)",Cadent:"Mutable houses. Mentally active, communicates ideas (W)"};
+const BANDNOTE = {Personal:"Houses 1 to 4: self, money, mind, home (B)",Social:"Houses 5 to 8: create, serve, partner, merge (B)",Universal:"Houses 9 to 12: meaning, society, the unseen (B)"};
+const oppHouse = n => ((n+5)%12)+1;
+const ordOf = n => HOUSES[oppHouse(n)].ord;
+
 /* ---------- helpers ---------- */
 function elSvg(el, px){
   const up = (el==="Fire"||el==="Air"), bar = (el==="Air"||el==="Earth");
@@ -458,6 +482,31 @@ const DECKS = {
       ${block("Keywords", `<p class="lifelesson">${e.kw}</p>`)}
       ${block("Talent", `<p class="lifelesson">${e.talent}</p>`)}
       ${block("Beware of", `<p class="lifelesson">${e.beware}</p>`)}`
+  },
+  houses:{ label:"Houses", items:HOUSES, plural:"house",
+    color:h=> h.kind==="intro" ? ELCOLOR.Gold : ELCOLOR[SIGNS[h.sign].element],
+    rail:h=> h.kind==="intro" ? {html:h.short, title:h.name, color:ELCOLOR.Gold, small:true} : {html:String(h.n), title:h.ord+" House", color:ELCOLOR[SIGNS[h.sign].element]},
+    counter:h=> h.kind==="intro" ? "Overview" : GROUPS[h.n]+" house",
+    front:h=> h.kind==="intro"
+      ? front("12", h.name, "The stage for the planet’s story", "The planet is the actor, the sign the costume, the house the stage.").replace('class="glyph"','class="glyph num"')
+      : front(String(h.n), h.ord+" House", `${h.title} · ${SIGNS[h.sign].name}`, h.line).replace('class="glyph"','class="glyph num"'),
+    back:h=> h.kind==="intro" ? `
+      ${bhead("12", h.name, "Houses")}
+      ${block("The idea", `<p class="lifelesson">The planet is the actor, the sign is the costume, and the house is the stage: the department of life where the action happens.</p>`)}
+      ${block("Read it in this order", bullets(["The planet: what it does","The sign: how it does it","The house: where it does it"]))}
+      ${block("Rules of the wheel", bullets(["The twelve houses come in the same order as the twelve signs, so house number matches sign number","Each house carries a little of its sign’s flavor","The Rising sign starts house 1, which is why you need a birth time","The house your Sun sits in is the most important house of your chart","A stellium is three or more planets in one house, which adds weight there"]))}
+      ${block("Find it", `<p class="lifelesson">Pull your chart on astro.com and read the house number beside each planet. Houses run in order from the Rising sign.</p>`)}
+      ${block("Questions (coursebook p.145)", bullets(["Which house has the most planets?","Which house is your Sun in?","How is your Rising sign different from your personality?"]))}
+      <p class="note">Houses are a Level 2 topic. Until then, house meanings come from Woolfolk (W), Bloch (B), and Racioppi (R), plus the coursebook and classes.</p>`
+    : `
+      ${bhead(SIGNS[h.sign].glyph+VS, h.ord+" House", GROUPS[h.n])}
+      <p class="label">Correspondences</p>
+      ${facts([["Title",h.title],["Matching sign",`${SIGNS[h.sign].glyph}${VS} ${SIGNS[h.sign].name}`],["Group",GROUPS[h.n]+(h.mystical?" · Mystical":"")],["Part of the wheel",h.band],["Opposite house",`${ordOf(h.n)} (${HOUSES[oppHouse(h.n)].sign!==undefined?SIGNS[HOUSES[oppHouse(h.n)].sign].name:''})`],...(h.angle?[["Angle",h.angle]]:[])])}
+      ${block("What it covers", `<div class="chips">${chips(h.chips,true)}</div>`)}
+      ${block("In my chart", `<p class="lifelesson">${h.mine}</p>`)}
+      ${h.class?block("Taught in class", `<p class="lifelesson">${h.class}</p>`):''}
+      ${block("Group and band", bullets([GROUPNOTE[GROUPS[h.n]]].concat(h.mystical?["Mystical house: roots, death and rebirth, the unseen. The houses of endings (W)"]:[]).concat([BANDNOTE[h.band]])))}
+      <p class="note">Meanings from books until Level 2 (W, B, R). Each house carries a little of the flavor of the sign with its number.</p>`
   },
   modes:{ label:"Modes", items:MODES, plural:"mode",
     color:()=>ELCOLOR.Gold,
