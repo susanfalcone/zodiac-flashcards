@@ -170,12 +170,12 @@ h1,h2,h3{font-family:var(--font-display);font-weight:600;text-wrap:balance;margi
 
   <nav class="rail" id="rail" aria-label="Jump to card"></nav>
 
-  <p class="src">Study cards for the signs, planets, elements, modes, and houses</p>
+  <p class="src">Study cards for the signs, planets, elements, modes, houses, and basics</p>
 </div>
 
 <script>
 const SIGNS = [
-{name:"Aries",glyph:"♈",symbol:"The Ram",element:"Fire",mode:"Cardinal",ruler:"Mars",rulerGlyph:"♂",house:"1st House",duality:"Masculine",polarity:"Libra",body:"Head, face",dates:"Mar 21 – Apr 19",
+{name:"Aries",pers:"Feisty push. Argues, loves to say you are wrong, does not know when to stop. Needs the rule: know when to stop.",soul:"Fighting for love. The pushiness is an attempt to make contact. Here to keep you awake and to be fully embodied.",hook:"1 = first. The Ram goes first. Number 1 is Fire (1 mod 4) and Cardinal.",glyph:"♈",symbol:"The Ram",element:"Fire",mode:"Cardinal",ruler:"Mars",rulerGlyph:"♂",house:"1st House",duality:"Masculine",polarity:"Libra",body:"Head, face",dates:"Mar 21 – Apr 19",
   tagline:"Initiates. Acts before it thinks things through.",
   signQ:["Initiating","Direct","Competitive","Impulsive","Courageous"],
   houseQ:["Identity","Self-image","First impressions","Initiative"],
@@ -183,7 +183,7 @@ const SIGNS = [
   evolved:["Leads with courage, not force","Acts fast without needing to fight","Turns anger into clean, direct honesty","Inspires others to move"],
   unevolved:["Impulsive to the point of reckless","Picks fights to feel alive","Starts more than it finishes","Turns everything into a competition"],
   lifeLesson:"Temper the drive to win with patience for other people, and learn when a fight is actually finished."},
-{name:"Taurus",glyph:"♉",symbol:"The Bull",element:"Earth",mode:"Fixed",ruler:"Venus",rulerGlyph:"♀",house:"2nd House",duality:"Feminine",polarity:"Scorpio",body:"Neck, throat",dates:"Apr 20 – May 20",
+{name:"Taurus",pers:"Stable but attached to security. Needs money under the bed and its things around it. Wants it its own way, which feels like safety.",soul:"The Buddha was a Taurus: non-attachment. Learns to sit still. Calm, patient, trusting that it all works out.",hook:"Bull = bank. Never take the chocolate away from a Taurus, soul or personality. Great meditators.",glyph:"♉",symbol:"The Bull",element:"Earth",mode:"Fixed",ruler:"Venus",rulerGlyph:"♀",house:"2nd House",duality:"Feminine",polarity:"Scorpio",body:"Neck, throat",dates:"Apr 20 – May 20",
   tagline:"Builds. Moves slowly and holds its ground.",
   signQ:["Steady","Sensual","Patient","Possessive","Grounded"],
   houseQ:["Money","Possessions","Self-worth","Values"],
@@ -191,7 +191,7 @@ const SIGNS = [
   evolved:["Builds lasting security, patiently","Enjoys pleasure without guilt","A steady presence others lean on","Loves itself exactly as it is"],
   unevolved:["Stubborn to the point of immovable","Possessive of people and things","Measures worth by what it owns","Resists change even when it helps"],
   lifeLesson:"Slowing down and being content with enough isn't settling. Let go before holding on turns into stuck."},
-{name:"Gemini",glyph:"♊",symbol:"The Twins",element:"Air",mode:"Mutable",ruler:"Mercury",rulerGlyph:"☿",house:"3rd House",duality:"Masculine",polarity:"Sagittarius",body:"Lungs, arms, hands, fingers",dates:"May 21 – Jun 20",
+{name:"Gemini",pers:"Fickle, playful, darting, easily entertained. Talks all day about nothing, just to hear itself.",soul:"The channel. The glyph is the Roman numeral II joining heaven and earth, a bamboo shoot. An empty vessel spirit speaks through. Speaks from heart or belly, not a random radio station.",hook:"Twins = two voices. Personality is a radio scanning stations; soul is a hollow bamboo.",glyph:"♊",symbol:"The Twins",element:"Air",mode:"Mutable",ruler:"Mercury",rulerGlyph:"☿",house:"3rd House",duality:"Masculine",polarity:"Sagittarius",body:"Lungs, arms, hands, fingers",dates:"May 21 – Jun 20",
   tagline:"Connects. Gathers information, talks it through.",
   signQ:["Curious","Talkative","Adaptable","Witty","Scattered"],
   houseQ:["Communication","Siblings","Local environment","Learning"],
@@ -199,7 +199,7 @@ const SIGNS = [
   evolved:["Connects ideas and people with ease","Genuinely curious, genuinely listens","Adapts without losing the thread","Makes complex things simple"],
   unevolved:["Scattered, starts everything, finishes little","Talks past people instead of with them","Says what's easy, not what's true","Flighty when things get serious"],
   lifeLesson:"Quiet the mind long enough to actually feel something before talking about it."},
-{name:"Cancer",glyph:"♋",symbol:"The Crab",element:"Water",mode:"Cardinal",ruler:"Moon",rulerGlyph:"☽",house:"4th House",duality:"Feminine",polarity:"Capricorn",body:"Chest, stomach, breasts",dates:"Jun 21 – Jul 22",
+{name:"Cancer",pers:"An emotional reaction machine. Everything hits the gut. Needs sanctuary, few close friends, family is everything. Works hard out of fear.",soul:"The most evolved sign in the esoteric view: enter a body, deal with the emotional realm, and keep the connection to spirit.",hook:"Crab = shell. Personality hides in the shell; soul keeps the door to spirit open inside it.",glyph:"♋",symbol:"The Crab",element:"Water",mode:"Cardinal",ruler:"Moon",rulerGlyph:"☽",house:"4th House",duality:"Feminine",polarity:"Capricorn",body:"Chest, stomach, breasts",dates:"Jun 21 – Jul 22",
   tagline:"Protects. Feels first, decides from there.",
   signQ:["Nurturing","Protective","Moody","Intuitive","Loyal"],
   houseQ:["Home","Family","Roots","Emotional foundation"],
@@ -207,7 +207,7 @@ const SIGNS = [
   evolved:["Creates real emotional safety","Nurtures without smothering","Honors the past without being ruled by it","Protects fiercely, forgives fully"],
   unevolved:["Moody, clings then withdraws","Uses guilt to keep people close","Never really forgives, just goes quiet","Takes everything personally"],
   lifeLesson:"Let feelings move all the way through instead of turning them into grudges or guilt trips."},
-{name:"Leo",glyph:"♌",symbol:"The Lion",element:"Fire",mode:"Fixed",ruler:"Sun",rulerGlyph:"☉",house:"5th House",duality:"Masculine",polarity:"Aquarius",body:"Heart, spine, back",dates:"Jul 23 – Aug 22",
+{name:"Leo",pers:"Crazy-energetic lover of life. Walks in and the room is fun. Starving for attention and control.",soul:"Not an easy sign to be. Selfless service feels foreign. The practice is giving the soul permission to serve. High road comes with a sword: clear, cosmic, usually right.",hook:"Lion = stage. Personality takes the spotlight; soul turns the lamp on for everyone else.",glyph:"♌",symbol:"The Lion",element:"Fire",mode:"Fixed",ruler:"Sun",rulerGlyph:"☉",house:"5th House",duality:"Masculine",polarity:"Aquarius",body:"Heart, spine, back",dates:"Jul 23 – Aug 22",
   tagline:"Expresses. Wants to be seen and to matter.",
   signQ:["Warm","Expressive","Proud","Generous","Dramatic"],
   houseQ:["Creativity","Romance","Children","Self-expression"],
@@ -215,7 +215,7 @@ const SIGNS = [
   evolved:["Leads with warmth, not ego","Shines without needing to eclipse others","Loyal once trust is earned","Turns the need for attention into real creativity"],
   unevolved:["Needs constant admiration to feel secure","Grandiose, can't stand being upstaged","Sulks or rages when ignored","Confuses being loved with being praised"],
   lifeLesson:"Real recognition means sharing the stage. Vulnerability, not performance, is the actual strength."},
-{name:"Virgo",glyph:"♍",symbol:"The Virgin",element:"Earth",mode:"Mutable",ruler:"Mercury",rulerGlyph:"☿",house:"6th House",duality:"Feminine",polarity:"Pisces",body:"Intestines, digestive system",dates:"Aug 23 – Sep 22",
+{name:"Virgo",pers:"Service, practicality, order. Has a system and will tell you how. Compulsion to help. Painful perfectionist.",soul:"Same service, chosen. Ask “Can I help you?” before helping. One word: kindness, to itself first.",hook:"Favorite word is “should.” Reframe: “I like who I am.” Personality helps, soul asks first.",glyph:"♍",symbol:"The Virgin",element:"Earth",mode:"Mutable",ruler:"Mercury",rulerGlyph:"☿",house:"6th House",duality:"Feminine",polarity:"Pisces",body:"Intestines, digestive system",dates:"Aug 23 – Sep 22",
   tagline:"Refines. Notices what's wrong and fixes it.",
   signQ:["Analytical","Meticulous","Humble","Practical","Self-critical"],
   houseQ:["Work","Routine","Health","Service"],
@@ -223,7 +223,7 @@ const SIGNS = [
   evolved:["Turns discernment into real service","Improves systems without demanding perfection","Humble mastery, quiet competence","Notices what helps, not just what's wrong"],
   unevolved:["Self-critical to the point of paralysis","Nitpicks others to avoid its own flaws","Mistakes being useful for being worthy","Can't relax until everything is right"],
   lifeLesson:"Trade harsh judgment for genuine service, and let a little faith fill in where logic runs out."},
-{name:"Libra",glyph:"♎",symbol:"The Scales",element:"Air",mode:"Cardinal",ruler:"Venus",rulerGlyph:"♀",house:"7th House",duality:"Masculine",polarity:"Aries",body:"Kidneys, bladder, lower back",dates:"Sep 23 – Oct 22",
+{name:"Libra",pers:"All about relationship, yet detached. Wants to be in one but not be one. Codependent, distracted by the other.",soul:"Interest turns inward. Finds the male and female inside. The gift is to fall in love with yourself. The true relationship is with the beloved above.",hook:"Scales = balance the inside before the outside. Libra rises into the soul with age.",glyph:"♎",symbol:"The Scales",element:"Air",mode:"Cardinal",ruler:"Venus",rulerGlyph:"♀",house:"7th House",duality:"Masculine",polarity:"Aries",body:"Kidneys, bladder, lower back",dates:"Sep 23 – Oct 22",
   tagline:"Balances. Decides by weighing the other side.",
   signQ:["Diplomatic","Charming","Fair-minded","Indecisive","Relational"],
   houseQ:["Partnership","Marriage","One-to-one bonds"],
@@ -231,7 +231,7 @@ const SIGNS = [
   evolved:["Builds real fairness, not just appearances","Diplomatic without abandoning itself","Brings out the best in a partnership","Weighs both sides, then actually decides"],
   unevolved:["Avoids conflict until resentment builds","People-pleases at its own expense","Indecisive, afraid to disappoint anyone","Chooses peace over truth"],
   lifeLesson:"Turn some of that famous fairness inward, and choose for yourself before you weigh everyone else's side."},
-{name:"Scorpio",glyph:"♏",symbol:"The Scorpion",element:"Water",mode:"Fixed",ruler:"Pluto",trad:"Mars",rulerGlyph:"♇",house:"8th House",duality:"Feminine",polarity:"Taurus",body:"Reproductive system",dates:"Oct 23 – Nov 21",
+{name:"Scorpio",pers:"Private, nonverbal depth. Wrestles with betrayal, money, power. Feeds on dark stories and horror films for the adrenaline.",soul:"Uses the intensity for spiritual purpose, quietly. Tantra, food as ritual (the sushi chef who blesses the food). Learns boundaries and how to say no.",hook:"Only a Scorpio will destroy the personality in the quest for the soul. Drama is the trap; story is just a story.",glyph:"♏",symbol:"The Scorpion",element:"Water",mode:"Fixed",ruler:"Pluto",trad:"Mars",rulerGlyph:"♇",house:"8th House",duality:"Feminine",polarity:"Taurus",body:"Reproductive system",dates:"Oct 23 – Nov 21",
   tagline:"Transforms. Goes to the root, holds nothing lightly.",
   signQ:["Intense","Magnetic","Secretive","Transformative","Loyal"],
   houseQ:["Shared resources","Intimacy","Transformation"],
@@ -239,7 +239,7 @@ const SIGNS = [
   evolved:["Transforms pain into earned intimacy","Fiercely loyal once trust is built","Goes where others won't look","Powerful without needing control"],
   unevolved:["Controls through jealousy and secrecy","Holds grudges indefinitely","Tests loyalty until it breaks","All or nothing, no middle ground"],
   lifeLesson:"Releasing control is safer than gripping it. Emotional honesty includes admitting the tears too."},
-{name:"Sagittarius",glyph:"♐",symbol:"The Archer",element:"Fire",mode:"Mutable",ruler:"Jupiter",rulerGlyph:"♃",house:"9th House",duality:"Masculine",polarity:"Gemini",body:"Hips, thighs",dates:"Nov 22 – Dec 21",
+{name:"Sagittarius",pers:"Loud, big, joyous, funny. Spills over the edge and a bit more. Truth used to insult. Always waiting to get in trouble.",soul:"The philosopher and sage. Turns every negative story into a parable. A mentor with a cause beyond the ego.",hook:"Archer: the same truth, two aims. Personality uses truth to insult you, soul uses it to bring you home.",glyph:"♐",symbol:"The Archer",element:"Fire",mode:"Mutable",ruler:"Jupiter",rulerGlyph:"♃",house:"9th House",duality:"Masculine",polarity:"Gemini",body:"Hips, thighs",dates:"Nov 22 – Dec 21",
   tagline:"Expands. Needs a horizon to move toward.",
   signQ:["Adventurous","Blunt","Philosophical","Optimistic","Restless"],
   houseQ:["Higher learning","Philosophy","Travel","Belief"],
@@ -247,7 +247,7 @@ const SIGNS = [
   evolved:["Honest optimism that lifts others up","Turns restlessness into real growth","Teaches what it's learned, generously","Sees the big picture clearly"],
   unevolved:["Blunt to the point of careless","Promises more than it delivers","Calls commitment a cage and runs","Preachy, certain its truth is the only one"],
   lifeLesson:"Moderation. Truth-telling still needs tact, and an open mind cuts both ways."},
-{name:"Capricorn",glyph:"♑",symbol:"The Sea-Goat (mountain goat)",element:"Earth",mode:"Cardinal",ruler:"Saturn",rulerGlyph:"♄",house:"10th House",duality:"Feminine",polarity:"Cancer",body:"Knees, bones, teeth, skin",dates:"Dec 22 – Jan 19",
+{name:"Capricorn",pers:"Absolutely driven. Ego tied to achievement, money, status. Credibility first, then advice.",soul:"Responds to its purpose. Bailey likens it to the saviors: they remember what they came to do. Strong body and work ethic. Excels from the soul’s urge, not for approval.",hook:"Goat climbs the mountain. Personality climbs for the view others see; soul climbs because it is the work.",glyph:"♑",symbol:"The Sea-Goat (mountain goat)",element:"Earth",mode:"Cardinal",ruler:"Saturn",rulerGlyph:"♄",house:"10th House",duality:"Feminine",polarity:"Cancer",body:"Knees, bones, teeth, skin",dates:"Dec 22 – Jan 19",
   tagline:"Builds structure. Earns things the long way.",
   signQ:["Disciplined","Ambitious","Reserved","Responsible","Patient"],
   houseQ:["Career","Reputation","Public standing"],
@@ -255,7 +255,7 @@ const SIGNS = [
   evolved:["Disciplined leadership that earns trust","Builds things that actually last","Responsible without martyrdom","Patient, plays the long game well"],
   unevolved:["Workaholic, worth tied to achievement","Controlling, distrusts others' competence","Withholds warmth until it feels earned","All work, no permission to rest"],
   lifeLesson:"Humility. Being useful doesn't require carrying it alone, and rest doesn't have to be earned."},
-{name:"Aquarius",glyph:"♒",symbol:"The Water Bearer",element:"Air",mode:"Fixed",ruler:"Uranus",trad:"Saturn",rulerGlyph:"♅",house:"11th House",duality:"Masculine",polarity:"Leo",body:"Ankles, calves, circulation",dates:"Jan 20 – Feb 18",
+{name:"Aquarius",pers:"Quirky nonconformist. Says no first, then okay two minutes later. Rebels against conformity without knowing why.",soul:"Here to bring the future. Thinks of community and change, open, eclectic, nonjudgmental. “How can I be of service to the collective?”",hook:"Water Bearer pours for everyone. Rebel is the personality; the soul urge is the easier one.",glyph:"♒",symbol:"The Water Bearer",element:"Air",mode:"Fixed",ruler:"Uranus",trad:"Saturn",rulerGlyph:"♅",house:"11th House",duality:"Masculine",polarity:"Leo",body:"Ankles, calves, circulation",dates:"Jan 20 – Feb 18",
   tagline:"Detaches to see the system. Serves the group over the self.",
   signQ:["Independent","Inventive","Detached","Humanitarian","Unconventional"],
   houseQ:["Friends","Community","Hopes and goals"],
@@ -263,7 +263,7 @@ const SIGNS = [
   evolved:["Visionary who serves the collective","Loyal in its own unconventional way","Welcomes feedback instead of digging in","Individual without needing to isolate"],
   unevolved:["Detached to the point of cold","Rebels for its own sake","So committed to different it won't compromise","Intellectualizes feeling instead of having it"],
   lifeLesson:"Accept your own eccentricity before asking the world to accept it. Being yourself doesn't require a cause."},
-{name:"Pisces",glyph:"♓",symbol:"The Fish",element:"Water",mode:"Mutable",ruler:"Neptune",trad:"Jupiter",rulerGlyph:"♆",house:"12th House",duality:"Feminine",polarity:"Virgo",body:"Feet",dates:"Feb 19 – Mar 20",
+{name:"Pisces",pers:"Sweet, kind, dreamy. Gives away its shirt, then goes home alone because people bug it. Vague and contradictory.",soul:"Christ-like in the esoteric view: sacrifices itself for the planet’s evolution. Very few personal needs, so it needs a personality to say “I want nice clothes.”",hook:"Two fish swimming opposite ways. You need both: a soul without a personality is taken advantage of.",glyph:"♓",symbol:"The Fish",element:"Water",mode:"Mutable",ruler:"Neptune",trad:"Jupiter",rulerGlyph:"♆",house:"12th House",duality:"Feminine",polarity:"Virgo",body:"Feet",dates:"Feb 19 – Mar 20",
   tagline:"Dissolves boundaries. Feels what isn't spoken.",
   signQ:["Empathic","Dreamy","Elusive","Compassionate","Imaginative"],
   houseQ:["The unconscious","Solitude","Endings","Hidden strengths"],
@@ -277,54 +277,54 @@ const VS = '︎';
 
 /* ---------- PLANETS (coursebook pp. 81-82, lectures, 10/20 review) ---------- */
 const PLANETS = [
-{name:"Sun",glyph:"☉",kw:"Life force · Personality · Self-expression",tagline:"Your personality and ego. The part that wants to be seen.",
+{name:"Sun",pace:"About 1° a day, one sign a month, 12 months around.",feel:"Inner planet. Not read as a transit.",hook:"Planet = what, sign = how, house = where.",glyph:"☉",kw:"Life force · Personality · Self-expression",tagline:"Your personality and ego. The part that wants to be seen.",
   rules:"Leo",house:"5th House",said:"I will (Leo)",exalted:"Aries",detriment:"Aquarius",fall:"Libra",
   chips:["Life force","Personality","Self-expression","Energy","Male energy"],
   quote:"The Sun is your personality, your ego.",
   points:["The Sun sign is the ego side: the knee-jerk way you enter the world, the part that wants approval and to be seen","The Sun’s house is the theme of the whole chart","Sun and Moon in the same sign is a new moon signature. In opposite signs it is a full moon signature"]},
-{name:"Moon",glyph:"☽",kw:"Needs · Emotions · Temperament · Intuition",tagline:"Your inner world and emotional body. How you respond under stress.",
+{name:"Moon",elx:"Water sinks, Air talks, Earth fixes, Fire flares.",pace:"About 2.5 days per sign, about 28 days around. [general knowledge]",feel:"Inner planet. Not read as a transit.",hook:"Moon moves fastest, so it is the mood of the day.",glyph:"☽",kw:"Needs · Emotions · Temperament · Intuition",tagline:"Your inner world and emotional body. How you respond under stress.",
   rules:"Cancer",house:"4th House",said:"I feel (Cancer)",exalted:"Taurus",detriment:"Capricorn",fall:"Scorpio",
   chips:["Emotional temperament","Intuition","Female energy","Habits and needs"],
   quote:"How you respond when something is painful.",
   points:["Water Moon: sensitive, retreats and goes nonverbal","Air Moon: needs to talk it out","Earth Moon: wants a list and a practical plan","Fire Moon: snaps first, apologizes after","None of the four is right or wrong"]},
-{name:"Mercury",glyph:"☿",kw:"Communication · Intellect · Mind · Speed",tagline:"How your thoughts operate, often apart from your emotions.",
+{name:"Mercury",elx:"Water feels it, Air runs it, Earth sizes it, Fire knows it.",glyph:"☿",kw:"Communication · Intellect · Mind · Speed",tagline:"How your thoughts operate, often apart from your emotions.",
   rules:"Gemini, Virgo",house:"3rd and 6th House",said:"I think (Gemini), I analyze (Virgo)",exalted:"Aquarius",detriment:"Sagittarius, Pisces",fall:"Pisces",
   chips:["Intellect","Communication","The way you think and learn"],
   quote:"Find your Mercury to catch the inner voice and notice your internal dialogue.",
   points:["Mercury rules two signs, Gemini and Virgo","The observer is the tool for Mercury: step back and watch the thought"],
   note:"Taught here as exalted in Aquarius. Traditionally it is Virgo."},
-{name:"Venus",glyph:"♀",kw:"Values · Desires · Pleasure · Softness",tagline:"How and what you love. What you are attracted to.",
+{name:"Venus",elx:"The mall test. Water browses the art, Air reads the bookstore, Earth hunts the sale, Fire tries it on.",glyph:"♀",kw:"Values · Desires · Pleasure · Softness",tagline:"How and what you love. What you are attracted to.",
   rules:"Taurus, Libra",house:"2nd and 7th House",said:"I have (Taurus), I balance (Libra)",exalted:"Pisces",detriment:"Scorpio, Aries",fall:"Virgo",
   chips:["Values and desires","Attraction","Pleasure","Beauty and art"],
   quote:"How you want to be in a relationship, and it varies by element.",
   points:["Water: all romance","Earth: practical, reliable, consistent","Fire: dramatic and physically active","Air: an intellectual who gives you words","Venus rules two signs, Taurus and Libra"]},
-{name:"Mars",glyph:"♂",kw:"Assertiveness · Energy · Thrust · Drive",tagline:"The warrior. How you spend your energy and take action.",
+{name:"Mars",elx:"Water cuddles, Air writes, Earth plans, Fire charges.",glyph:"♂",kw:"Assertiveness · Energy · Thrust · Drive",tagline:"The warrior. How you spend your energy and take action.",
   rules:"Aries (Scorpio traditionally)",house:"1st House",said:"I am (Aries)",exalted:"Capricorn",detriment:"Libra, Taurus",fall:"Cancer",
   chips:["Expenditure of energy","Assertiveness","Drive and action","Male energy"],
   quote:"It’s red, it’s initiative, it’s Martian, it’s the warrior.",
   points:["Male energy in everyone, whatever the gender","The part that defends, protects, and provides","Water asserts by helping, air by words, earth by getting it done, fire by physical action","Mars in Capricorn is the mountain climber"]},
-{name:"Jupiter",glyph:"♃",kw:"Ease · Expansion · Growth · Excess",tagline:"More. Joy, luck, and permission to enjoy.",
+{name:"Jupiter",pace:"About a year per sign (12 years ÷ 12 signs), 12 years around.",feel:"A gift. Transit orb about 5°.",hook:"Santa Claus. Jupiter more, Saturn less.",glyph:"♃",kw:"Ease · Expansion · Growth · Excess",tagline:"More. Joy, luck, and permission to enjoy.",
   rules:"Sagittarius (Pisces traditionally)",house:"9th House",said:"I seek, I see (Sagittarius)",exalted:"Cancer (coursebook table)",detriment:"Gemini, Virgo",fall:"Capricorn",
   chips:["Expansion","What you enjoy most","Luck","Ease","Magnifies"],
   quote:"Santa Claus energy. Jupiter is just a party waiting to happen.",
   points:["Its keyword is more: more food, play, spending, travel","Also about truth-telling and bluntness","A diet that never lets you eat is Saturn, not Jupiter","Red lines to Jupiter on a chart can mean restricted access to joy"],
   note:"Sources differ: the coursebook table says Cancer, the lectures say Pisces. Still open."},
-{name:"Saturn",glyph:"♄",kw:"Adult · Life lessons · Maturity · Restrictions · Responsibility",tagline:"The promise you made before you arrived. The lesson you can’t skip.",
+{name:"Saturn",pace:"2 to 2.5 years per sign, 28 to 29 years around.",feel:"A knock. Can last about a year over a point. Ladder: 7 square, 14 opposite, 21 square, 28 to 30 return.",hook:"Knock first, then the door comes down. Backwards, Saturn spells “lived.”",glyph:"♄",kw:"Adult · Life lessons · Maturity · Restrictions · Responsibility",tagline:"The promise you made before you arrived. The lesson you can’t skip.",
   rules:"Capricorn (Aquarius traditionally)",house:"10th House",said:"I use (Capricorn)",exalted:"Libra",detriment:"Cancer, Leo",fall:"Aries",
   chips:["Life lessons","Destiny","Discipline","Limits","Responsibility","Maturity"],
   quote:"Saturn is the teacher, and the lessons are not optional.",
   points:["The most important planet in this system","Saturn knocks. Ignore it and it knocks the door down","Seven-year markers: ages 7, 14, 21, then the first return at about 28 to 30","Transiting Saturn in the same mode as natal Saturn means a Saturn cycle is active","Nothing to fear: it supports the path to mastery and wisdom"]},
-{name:"Uranus",glyph:"♅",kw:"Freedom · Changes · Chaos · Genius · Eccentricity",tagline:"Breaks the pattern. The unexpected and the genius.",
+{name:"Uranus",pace:"About 7 years per sign, 84 years around.",feel:"A jolt. Within about 2° of the Sun or Rising is a big event: a soul moment lasting 8 months to a year.",hook:"Slowest after Neptune and Pluto: Pluto, Neptune, Uranus, then Saturn.",glyph:"♅",kw:"Freedom · Changes · Chaos · Genius · Eccentricity",tagline:"Breaks the pattern. The unexpected and the genius.",
   rules:"Aquarius (Saturn traditionally)",house:"11th House",said:"I know (Aquarius)",exalted:"Not listed",detriment:"Leo",fall:"Not listed",
   chips:["Freedom","Changes","Chaos, the unexpected","Genius","Eccentricity"],
   quote:"The 11th house is community, society, progress, the internet.",
   points:["Uranus is one of the three planets ancient astrologers did not know","Aquarius life lesson: accept your eccentricity"]},
-{name:"Neptune",glyph:"♆",kw:"Universal love · Dreams · Illusions · Intuition",tagline:"Dissolves boundaries. The mystic and the dreamer.",
+{name:"Neptune",pace:"About 14 years per sign (164 ÷ 12, average), about 164 years around.",feel:"A fog. Within about 2° of the Sun or Rising.",hook:"Fog: you cannot see the edges.",glyph:"♆",kw:"Universal love · Dreams · Illusions · Intuition",tagline:"Dissolves boundaries. The mystic and the dreamer.",
   rules:"Pisces (Jupiter traditionally)",house:"12th House",said:"I dream, I believe (Pisces)",exalted:"Not listed",detriment:"Virgo",fall:"Not listed",
   chips:["Dreams and illusions","Idealism","Mystic and magician","Universal love","Intuition"],
   quote:"The 12th house is subtle energy, spirit, the hidden, aloneness.",
   points:["Pisces life lesson: establish boundaries","Low road is escapism and gullibility, high road is creative, psychic, trusting"]},
-{name:"Pluto",glyph:"♇",kw:"Transformation · Unconscious · Trauma · Power",tagline:"Goes to the root. Power that can go both ways.",
+{name:"Pluto",pace:"About 21 years per sign on average, uneven, about 248 years around.",feel:"An oven. Within about 2° of the Sun or Rising.",hook:"Oven: it bakes you into something else.",glyph:"♇",kw:"Transformation · Unconscious · Trauma · Power",tagline:"Goes to the root. Power that can go both ways.",
   rules:"Scorpio (Mars traditionally)",house:"8th House",said:"I desire (Scorpio)",exalted:"Not listed",detriment:"Taurus",fall:"Not listed",
   chips:["Transformation","The unconscious","Trauma","Power"],
   quote:"P stands for presence. Pluto stands for power, and it can go both ways.",
@@ -338,24 +338,28 @@ const ELEMENTS = [
   chips:["Enthusiastic","Impulsive","Inspirational","Humor","Drama","Fun"],
   high:["Courageous","Inspirational","Passionate","Bold","Direct"],low:["Anger and temper","Burns","Over the top"],
   ask:"Can you push yourself to honesty, physical challenges, and starting something new? Do you give yourself the right to your joy and passion?",
+  planets:["Moon flares","Mercury knows it","Venus tries it on","Mars charges"],
   moon:"Fire Moon snaps first, then apologizes."},
 {kind:"el",name:"Earth",signs:"Taurus · Virgo · Capricorn",nums:"2, 6, 10",tagline:"Practical, a fix-it energy, goal oriented.",
   pace:"Yin, feminine, slow. Night energy",body:"Physical plane: health, embodiment, money, work, slowing down",pairs:"Water (water on earth makes fertile mud)",color:"Green on astro.com",
   chips:["Practical","Fix-it","Goal oriented","Service","Dependable","Loners"],
   high:["Grounded","Methodical"],low:["Judgmental","High standards and dutiful","Chronic “not enoughness”","Money anxiety"],
   ask:"Can you follow through to manifestation? Do you care for your body, health, and diet? Do you believe in abundance?",
+  planets:["Moon fixes","Mercury sizes it","Venus hunts the sale","Mars plans"],
   moon:"Earth Moon wants a list and a practical plan."},
 {kind:"el",name:"Air",signs:"Gemini · Libra · Aquarius",nums:"3, 7, 11",tagline:"Independent, curious, a thinker.",
   pace:"Yang, masculine, fast. Day energy",body:"Mental body: mind, communication, inner dialogue, relationship",pairs:"Fire (air feeds the fire)",color:"Yellow or orange on astro.com",
   chips:["Independent","Freedom","Thinker","Curious","Talkative","Observant"],
   high:["Open-minded","Communicative","Relational","Mental","Light"],low:["Forgetful","Detached from body and emotion","Needs space and freedom"],
   ask:"Do your words match your truth, insights, and thoughts? Do you allow yourself the freedom to think for yourself?",
+  planets:["Moon talks","Mercury runs it","Venus reads the bookstore","Mars writes"],
   moon:"Air Moon needs to talk it out."},
 {kind:"el",name:"Water",signs:"Cancer · Scorpio · Pisces",nums:"4, 8, 12",tagline:"Intuitive, deep feeling, private.",
   pace:"Yin, feminine, slow. Night energy",body:"Emotional body: managing emotions, self-care, softening (water can freeze)",pairs:"Earth (water on earth makes fertile mud)",color:"Blue on astro.com",
   chips:["Intuitive","Deep feelings","Vibrational","Aware","Instinctual","Private","Secretive","Spiritual"],
   high:["Caring","Nurturing","Deep","Reflective","Compassionate"],low:["No boundaries","Absorbs others’ energy","Overwhelm","Escapism and addiction","Can freeze"],
   ask:"Can you allow your instinct, feelings, and intuition to flow? Can you rest in the quiet of solitude and silence?",
+  planets:["Moon sinks","Mercury feels it","Venus browses the art","Mars cuddles"],
   moon:"Water Moon is sensitive and retreats, going nonverbal."}
 ].map(e=>Object.assign(e,{col:e.name}));
 
@@ -393,22 +397,24 @@ const MODES = [
 /* ---------- HOUSES (Houses study sheet) ---------- */
 const HOUSES = [
 {kind:"intro",name:"How houses work",short:"All"},
-{n:1,ord:"1st",sign:0,title:"Self",line:"Body, looks, mannerisms, how others see you",ruler:"Mars",chips:["Body","Looks","Mannerisms","How others see you","Ego","Action","Initiator","The lens for the chart"],band:"Personal",angle:"Rising (Ascendant) starts it"},
-{n:2,ord:"2nd",sign:1,title:"Money and possessions",line:"Income, earning power, what you value, self-worth",ruler:"Venus",chips:["Income","Earning power","Values","Self-worth","Spirituality","Simplicity"],band:"Personal"},
-{n:3,ord:"3rd",sign:2,title:"Communication",line:"Thinking, speaking, writing, siblings, short trips",ruler:"Mercury",chips:["Thinking","Speaking","Writing","Consciousness","Siblings","Transportation","Short trips","Immediate surroundings"],band:"Personal"},
-{n:4,ord:"4th",sign:3,title:"Home and roots",line:"Childhood home, family, heritage, real estate, safety",ruler:"Moon",chips:["Childhood home","Family","Heritage","Mother","Nurturing","Real estate","The unconscious","Safety"],band:"Personal",angle:"IC starts it",mystical:true},
-{n:5,ord:"5th",sign:4,title:"Creativity and joy",line:"Play, romance, children, the arts, the heart",ruler:"Sun",chips:["Play","Romance","Love affairs","Children","Creative expression","Hobbies","Pleasure","Gambling"],band:"Social"},
-{n:6,ord:"6th",sign:5,title:"Service and health",line:"Daily work, routines, diet, coworkers, state of health",ruler:"Mercury",chips:["Daily work","Routines","Service","Refinement","Details and planning","Analyst","Diet","Coworkers","State of health"],band:"Social"},
-{n:7,ord:"7th",sign:6,title:"Partnership",line:"Marriage, business partners, contracts, open enemies",ruler:"Venus",chips:["Marriage","Relationships and harmony","Negotiation","Legal affairs","Contracts","Cooperation","Open enemies"],band:"Social",angle:"Descendant starts it"},
-{n:8,ord:"8th",sign:7,title:"Transformation",line:"Shared money, inheritance, intimacy, death, the occult",ruler:"Pluto",chips:["Transformation","Rebirth","The underworld","Therapists","Legacies and taxes","Shared money","Intimacy","Death","The occult"],band:"Social",mystical:true},
-{n:9,ord:"9th",sign:8,title:"Expansion",line:"Higher education, philosophy, religion, long travel, publishing",ruler:"Jupiter",chips:["Seeker","Big-picture thinker","Optimist","Higher education","Philosophy","Religion","Long travel","Publishing"],band:"Universal"},
-{n:10,ord:"10th",sign:9,title:"Career and reputation",line:"Profession, status, ambition, authority",ruler:"Saturn",chips:["Career","Reputation","Ambition","Slow starter","Results","Responsibility","Destiny","Authority"],band:"Universal",angle:"Midheaven starts it",class:"The house of responsibility, work, and leadership"},
-{n:11,ord:"11th",sign:10,title:"Friends and groups",line:"Long-term hopes and wishes, causes, community, ideals",ruler:"Uranus",chips:["Friends","Social alliances and clubs","Support systems","Technology","Futurist","Eccentric","Causes","Long-term hopes and wishes"],band:"Universal"},
-{n:12,ord:"12th",sign:11,title:"The hidden",line:"Subconscious, secrets, solitude, karma, self-undoing",ruler:"Neptune",chips:["Secrets","Hidden lives","Psychic and magic","Past lives","Solitude","Privacy","Behind the scenes","Subconscious","Self-undoing"],band:"Universal",mystical:true}
+{n:1,ord:"1st",sign:0,title:"Self",line:"Body, looks, mannerisms, how others see you",ruler:"Mars",chips:["Body","Looks","Mannerisms","How others see you","Ego","Action","Initiator","The lens for the chart"],band:"Embodiment",half:"Inward",props:"Punching bag, workout gear, a bicycle, yoga clothes",angle:"Rising (Ascendant) starts it"},
+{n:2,ord:"2nd",sign:1,title:"Money and possessions",line:"Income, earning power, what you value, self-worth",ruler:"Venus",chips:["Income","Earning power","Values","Self-worth","Spirituality","Simplicity"],band:"Embodiment",half:"Inward",props:"Checkbook, a drum, chocolate, rugs"},
+{n:3,ord:"3rd",sign:2,title:"Communication",line:"Thinking, speaking, writing, siblings, short trips",ruler:"Mercury",chips:["Thinking","Speaking","Writing","Consciousness","Siblings","Transportation","Short trips","Immediate surroundings"],band:"Embodiment",half:"Inward",props:"Computer, books, a phone"},
+{n:4,ord:"4th",sign:3,title:"Home and roots",line:"Childhood home, family, heritage, real estate, safety",ruler:"Moon",chips:["Childhood home","Family","Heritage","Mother","Nurturing","Real estate","The unconscious","Safety"],band:"Service",half:"Inward",props:"Childhood photos, a cookbook, Kleenex",angle:"IC starts it",mystical:true},
+{n:5,ord:"5th",sign:4,title:"Creativity and joy",line:"Play, romance, children, the arts, the heart",ruler:"Sun",chips:["Play","Romance","Love affairs","Children","Creative expression","Hobbies","Pleasure","Gambling"],band:"Service",half:"Inward",props:"A stage, karaoke mic, costumes"},
+{n:6,ord:"6th",sign:5,title:"Service and health",line:"Daily work, routines, diet, coworkers, state of health",ruler:"Mercury",chips:["Daily work","Routines","Service","Refinement","Details and planning","Analyst","Diet","Coworkers","State of health"],band:"Service",half:"Inward",props:"Vitamins, plants, bookkeeping, details"},
+{n:7,ord:"7th",sign:6,title:"Partnership",line:"Marriage, business partners, contracts, open enemies",ruler:"Venus",chips:["Marriage","Relationships and harmony","Negotiation","Legal affairs","Contracts","Cooperation","Open enemies"],band:"Merging",half:"Outward",props:"Judge’s hammer, lawyer’s pad, two dolls",angle:"Descendant starts it"},
+{n:8,ord:"8th",sign:7,title:"Transformation",line:"Shared money, inheritance, intimacy, death, the occult",ruler:"Pluto",chips:["Transformation","Rebirth","The underworld","Therapists","Legacies and taxes","Shared money","Intimacy","Death","The occult"],band:"Merging",half:"Outward",props:"Nietzsche, murder mysteries, a key",mystical:true},
+{n:9,ord:"9th",sign:8,title:"Expansion",line:"Higher education, philosophy, religion, long travel, publishing",ruler:"Jupiter",chips:["Seeker","Big-picture thinker","Optimist","Higher education","Philosophy","Religion","Long travel","Publishing"],band:"Merging",half:"Outward",props:"Packed suitcase, passport, tickets"},
+{n:10,ord:"10th",sign:9,title:"Career and reputation",line:"Profession, status, ambition, authority",ruler:"Saturn",chips:["Career","Reputation","Ambition","Slow starter","Results","Responsibility","Destiny","Authority"],band:"Transpersonal",half:"Outward",props:"A suit, a briefcase, the best of everything (a late bloomer)",angle:"Midheaven starts it",class:"The house of responsibility, work, and leadership"},
+{n:11,ord:"11th",sign:10,title:"Friends and groups",line:"Long-term hopes and wishes, causes, community, ideals",ruler:"Uranus",chips:["Friends","Social alliances and clubs","Support systems","Technology","Futurist","Eccentric","Causes","Long-term hopes and wishes"],band:"Transpersonal",half:"Outward",props:"Many computers, offbeat people, tribes"},
+{n:12,ord:"12th",sign:11,title:"The hidden",line:"Subconscious, secrets, solitude, karma, self-undoing",ruler:"Neptune",chips:["Secrets","Hidden lives","Psychic and magic","Past lives","Solitude","Privacy","Behind the scenes","Subconscious","Self-undoing"],band:"Transpersonal",half:"Outward",props:"Incense, tarot cards, a Ouija board",mystical:true}
 ];
 const GROUPS = {1:"Angular",4:"Angular",7:"Angular",10:"Angular",2:"Succedent",5:"Succedent",8:"Succedent",11:"Succedent",3:"Cadent",6:"Cadent",9:"Cadent",12:"Cadent"};
 const GROUPNOTE = {Angular:"Cardinal houses. Prominence in the world",Succedent:"Fixed houses. Stability, willpower, fixity of purpose",Cadent:"Mutable houses. Mentally active, communicates ideas"};
-const BANDNOTE = {Personal:"Houses 1 to 4: self, money, mind, home",Social:"Houses 5 to 8: create, serve, partner, merge",Universal:"Houses 9 to 12: meaning, society, the unseen"};
+const BANDNOTE = {Embodiment:"Houses 1 to 3: embodiment. Body, money, mind",Service:"Houses 4 to 6: service. Family, joy, health",Merging:"Houses 7 to 9: merging. Partner, shared, meaning",Transpersonal:"Houses 10 to 12: transpersonal. Career, community, the unseen"};
+const HALFNOTE = {Inward:"Houses 1 to 6 sit below the horizon: inward, personal",Outward:"Houses 7 to 12 sit above the horizon: outward, toward others"};
+const OPPNOTE = {1:"1 and 7: me versus us",7:"1 and 7: me versus us",2:"2 and 8: mine versus ours",8:"2 and 8: mine versus ours"};
 const oppHouse = n => ((n+5)%12)+1;
 const ordOf = n => HOUSES[oppHouse(n)].ord;
 
@@ -429,6 +435,22 @@ function front(glyph, name, mono, tagline, extra){
   return `${extra||''}<div class="glyph">${glyph}</div><h2>${name}</h2><div class="dates">${mono}</div><div class="tagline">${tagline}</div><div class="hint">Tap to flip · Swipe for next</div>`;
 }
 
+/* ---------- BASICS (class patterns and tricks) ---------- */
+const BASICS = [
+{n:"1",title:"Counting tricks",tag:"Signs by number",line:"Sign number mod 4 is the element. Mod 3 is the mode.",
+ pts:["Element: 1 Fire, 2 Earth, 3 Air, 4 Water, then repeat (5 Fire, 6 Earth...)","Mode: 1 cardinal, 2 fixed, 3 mutable, then repeat","Houses mirror signs: house 5 is the Leo house","Angular houses 1, 4, 7, 10 are the cardinal numbers"]},
+{n:"2",title:"Aspects by counting",tag:"Signs apart",line:"Count signs apart to find the aspect.",
+ pts:["Sextile: 2 apart (60°), same polarity","Square: 3 apart (90°), same mode","Trine: 4 apart (120°), same element","Opposition: 6 apart (180°)","Orbs: 10° when the Sun, Moon, or Rising is involved, 5° otherwise"]},
+{n:"3",title:"What, how, where",tag:"Reading unit",line:"Planet = what. Sign = how. House = where.",
+ pts:["The planet is the actor, the sign the costume, the house the stage","Read in that order every time","Personality reacts, soul chooses: Sun is personality, Rising is soul (class material)"]},
+{n:"4",title:"The transit ladder",tag:"Slow planets",line:"The slower the planet, the heavier the feel.",
+ pts:["Jupiter is a gift, Saturn a knock, Uranus a jolt, Neptune a fog, Pluto an oven","Pace per sign: Jupiter about 1, Saturn 2 to 2.5, Uranus 7, Neptune about 14, Pluto about 21 years","Cycle: 12, 28 to 29, 84, 164, 248 years","Slowest: Pluto, then Neptune, then Uranus, then Saturn","Outer planet within about 2° of the Sun, Rising, or Midheaven is the big one"]},
+{n:"5",title:"The Sun clock",tag:"Houses by time of day",line:"Picture the Sun’s day around the wheel.",
+ pts:["Sunrise: 1st house","Noon, the top: 10th house, the Midheaven","Sunset: 6th to 7th","Midnight, the bottom: 4th house","Houses 1 to 6 are below the horizon, 7 to 12 above"]},
+{n:"6",title:"Study order for a read",tag:"The five steps",line:"Sun, Rising, Moon, then the rest, then the shape.",
+ pts:["1. The Sun: personality type, high road or low road, personality or soul?","2. The Rising: the soul","3. The Moon: how it responds under stress","4. The elements and modes: count the planets","5. Then the houses, starting with the Sun’s house"]}
+];
+
 /* ---------- decks ---------- */
 const DECKS = {
   signs:{ label:"Signs", items:SIGNS, plural:"sign",
@@ -444,7 +466,11 @@ const DECKS = {
       ${block(`Qualities of the house (${s.house})`, `<div class="chips">${chips(s.houseQ)}</div>`)}
       ${block(`Qualities of the planet (${s.ruler})`, `<div class="chips">${chips(s.planetQ)}</div>`)}
       ${block("Life lesson", `<p class="lifelesson">${s.lifeLesson}</p>`)}
-      ${roads(s.evolved, s.unevolved)}`
+      ${roads(s.evolved, s.unevolved)}
+      ${block("Personality (the Sun side, compulsive)", `<p class="lifelesson">${s.pers}</p>`)}
+      ${block("Soul (the Rising side, conscious)", `<p class="lifelesson">${s.soul}</p>`)}
+      <p class="note">Class material on personality and soul, kept separate from the Bailey book layer. Personality reacts, soul chooses.</p>
+      ${block("Memory hook", `<p class="lifelesson">${s.hook}</p>`)}`
   },
   planets:{ label:"Planets", items:PLANETS, plural:"planet",
     color:()=>ELCOLOR.Gold,
@@ -458,6 +484,9 @@ const DECKS = {
       ${block("Keywords", `<div class="chips">${chips(p.chips,true)}</div>`)}
       ${block("Course notes", `<p class="lifelesson">${p.quote}</p>`)}
       ${block("Worth remembering", bullets(p.points))}
+      ${p.elx?block("By element", `<p class="lifelesson">${p.elx}</p>`):''}
+      ${p.pace?block("Pace and transit", bullets(["Pace: "+p.pace,"Transit: "+p.feel])):''}
+      ${p.hook?block("Memory hook", `<p class="lifelesson">${p.hook}</p>`):''}
       ${p.note?`<p class="note">${p.note}</p>`:''}`
   },
   elements:{ label:"Elements", items:ELDECK, plural:"card",
@@ -476,6 +505,8 @@ const DECKS = {
       ${roads(e.high, e.low)}
       ${block("Ask yourself", `<p class="lifelesson">${e.ask}</p>`)}
       ${block("In the Moon", `<p class="lifelesson">${e.moon}</p>`)}
+      ${block("Through the personal planets", bullets(e.planets))}
+      ${block("Memory hook", `<p class="lifelesson">${e.name==="Fire"?"Sign numbers 1, 5, 9. Element = sign number mod 4 (1 Fire, 2 Earth, 3 Air, 0 Water). Fire and Air are fast day energy; Earth and Water are slow night energy.":e.name==="Earth"?"Sign numbers 2, 6, 10. Earth is number 2 mod 4. Trines are 4 signs apart, so the Earth signs are 4 apart.":e.name==="Air"?"Sign numbers 3, 7, 11. Air is number 3 mod 4. Air feeds fire.":"Sign numbers 4, 8, 12. Water is number 0 mod 4. Water on earth makes fertile mud."}</p>`)}
       <p class="note">Counting planets in a chart: 4 or 5 or more is dominant, 2 to 3 is balanced, 0 to 1 is a singleton (underdeveloped, or already mastered).</p>`
     : `
       ${bhead(`<span class="pair sm">${elSvg(e.a,20)}<span class="plus">+</span>${elSvg(e.b,20)}</span>`, e.name, "Blend")}
@@ -494,17 +525,29 @@ const DECKS = {
       ${bhead("12", h.name, "Houses")}
       ${block("The idea", `<p class="lifelesson">The planet is the actor, the sign is the costume, and the house is the stage: the department of life where the action happens.</p>`)}
       ${block("Read it in this order", bullets(["The planet: what it does","The sign: how it does it","The house: where it does it"]))}
-      ${block("Rules of the wheel", bullets(["The twelve houses come in the same order as the twelve signs, so house number matches sign number","Each house carries a little of its sign’s flavor","The Rising sign starts house 1, which is why you need a birth time","The house your Sun sits in is the most important house of your chart","A stellium is three or more planets in one house, which adds weight there"]))}
+      ${block("Rules of the wheel", bullets(["The twelve houses come in the same order as the twelve signs, so house number matches sign number","Each house carries a little of its sign’s flavor","The Rising sign starts house 1, which is why you need a birth time","The house your Sun sits in is the most important house of your chart","A stellium is three or more planets in one house, which adds weight there. Two or more planets also make a house significant","Planet = what, sign = how, house = where","The Sun clock: sunrise is the 1st house, noon is the top (10th, Midheaven), sunset is the 6th to 7th, midnight is the 4th","Trios: 1 to 3 embodiment, 4 to 6 service, 7 to 9 merging, 10 to 12 transpersonal","Halves: 1 to 6 inward (below the horizon), 7 to 12 outward (above)","Opposites: 1 and 7 me versus us, 2 and 8 mine versus ours"]))}
       ${block("Find it", `<p class="lifelesson">Pull your chart on astro.com and read the house number beside each planet. Houses run in order from the Rising sign.</p>`)}
       ${block("Questions (coursebook p.145)", bullets(["Which house has the most planets?","Which house is your Sun in?","How is your Rising sign different from your personality?"]))}
 `
     : `
       ${bhead(SIGNS[h.sign].glyph+VS, h.ord+" House", GROUPS[h.n])}
       <p class="label">Correspondences</p>
-      ${facts([["Title",h.title],["Matching sign",`${SIGNS[h.sign].glyph}${VS} ${SIGNS[h.sign].name}`],["Ruling planet",`${PLANETS.find(p=>p.name===h.ruler).glyph}${VS} ${h.ruler}`],["Group",GROUPS[h.n]+(h.mystical?" · Mystical":"")],["Part of the wheel",h.band],["Opposite house",`${ordOf(h.n)} (${HOUSES[oppHouse(h.n)].sign!==undefined?SIGNS[HOUSES[oppHouse(h.n)].sign].name:''})`],...(h.angle?[["Angle",h.angle]]:[])])}
+      ${facts([["Title",h.title],["Matching sign",`${SIGNS[h.sign].glyph}${VS} ${SIGNS[h.sign].name}`],["Ruling planet",`${PLANETS.find(p=>p.name===h.ruler).glyph}${VS} ${h.ruler}`],["Group",GROUPS[h.n]+(h.mystical?" · Mystical":"")],["Part of the wheel",h.band+" · "+h.half],["Opposite house",`${ordOf(h.n)} (${HOUSES[oppHouse(h.n)].sign!==undefined?SIGNS[HOUSES[oppHouse(h.n)].sign].name:''})`],...(h.angle?[["Angle",h.angle]]:[])])}
       ${block("What it covers", `<div class="chips">${chips(h.chips,true)}</div>`)}
       ${h.class?block("Worth knowing", `<p class="lifelesson">${h.class}</p>`):''}
-      ${block("Group and band", bullets([GROUPNOTE[GROUPS[h.n]]].concat(h.mystical?["Mystical house: roots, death and rebirth, the unseen. The houses of endings"]:[]).concat([BANDNOTE[h.band]])))}`
+      ${block("Props (how to picture it)", `<p class="lifelesson">${h.props}</p>`)}
+      ${block("Group, trio and half", bullets([GROUPNOTE[GROUPS[h.n]]].concat(h.mystical?["Mystical house: roots, death and rebirth, the unseen. The houses of endings"]:[]).concat([BANDNOTE[h.band],HALFNOTE[h.half]]).concat(OPPNOTE[h.n]?[OPPNOTE[h.n]]:[])))}
+      <p class="note">House number matches sign number. Angular houses (1, 4, 7, 10) match the cardinal signs.</p>`
+  },
+  basics:{ label:"Basics", items:BASICS, plural:"card",
+    color:()=>ELCOLOR.Gold,
+    rail:b=>({html:b.n, title:b.title, color:ELCOLOR.Gold}),
+    counter:()=>"Basics",
+    front:b=>front(b.n, b.title, b.tag, b.line).replace('class="glyph"','class="glyph num"'),
+    back:b=>`
+      ${bhead(b.n, b.title, "Basics")}
+      ${block("The rule", `<p class="lifelesson">${b.line}</p>`)}
+      ${block("Work it through", bullets(b.pts))}`
   },
   modes:{ label:"Modes", items:MODES, plural:"mode",
     color:()=>ELCOLOR.Gold,
@@ -519,6 +562,7 @@ const DECKS = {
       ${roads(m.high, m.low)}
       ${block("Conversations of the modes", bullets(m.says))}
       ${m.extra?block("Worth remembering", bullets(m.extra)):''}
+      ${block("Memory hook", `<p class="lifelesson">Mode = sign number mod 3: 1 is cardinal, 2 is fixed, 0 is mutable. Cardinal starts, fixed holds, mutable hands off.</p>`)}
       <p class="note">Say mode first, then element, such as “mutable air.” When transiting Saturn is in the same mode as natal Saturn, a Saturn cycle is active. A grand cross is four planets in one mode.</p>`
   }
 };
