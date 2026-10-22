@@ -170,7 +170,7 @@ h1,h2,h3{font-family:var(--font-display);font-weight:600;text-wrap:balance;margi
 
   <nav class="rail" id="rail" aria-label="Jump to card"></nav>
 
-  <p class="src">Study cards for the signs, planets, elements, modes, houses, and basics</p>
+  <p class="src">Study cards: the core first, then signs, planets, elements, modes, houses, and basics</p>
 </div>
 
 <script>
@@ -451,8 +451,42 @@ const BASICS = [
  pts:["1. The Sun: personality type, high road or low road, personality or soul?","2. The Rising: the soul","3. The Moon: how it responds under stress","4. The elements and modes: count the planets","5. Then the houses, starting with the Sun’s house"]}
 ];
 
+/* ---------- CORE (ten things to know cold) ---------- */
+const CORE = [
+{n:"1",title:"Sign order and numbers",tag:"Say a number, think the sign",line:"Aries 1 through Pisces 12.",
+ pts:["1 Aries, 2 Taurus, 3 Gemini, 4 Cancer","5 Leo, 6 Virgo, 7 Libra, 8 Scorpio","9 Sagittarius, 10 Capricorn, 11 Aquarius, 12 Pisces","Drill: say 7, then say Libra"]},
+{n:"2",title:"Element and mode from the number",tag:"Two divisions",line:"Number ÷ 4 gives the element. Number ÷ 3 gives the mode.",
+ pts:["÷ 4, remainder 1 fire, 2 earth, 3 air, 0 water","÷ 3, remainder 1 cardinal, 2 fixed, 0 mutable","Check: 7 is Libra. 7 ÷ 4 leaves 3 (air). 7 ÷ 3 leaves 1 (cardinal)"]},
+{n:"3",title:"Seven verbs",tag:"Element and mode in one word each",line:"Fire acts, Earth builds, Air connects, Water feels. Cardinal starts, Fixed holds, Mutable adapts.",
+ pts:["Say mode first, then element: mutable earth is Virgo","The verbs tell look-alike signs apart"]},
+{n:"4",title:"Rulers, in sign order",tag:"Modern rulers",line:"Mars, Venus, Mercury, Moon, Sun, Mercury, Venus, Pluto, Jupiter, Saturn, Uranus, Neptune.",
+ pts:["Mercury and Venus each rule two signs","Scorpio, Aquarius and Pisces also have traditional rulers (Mars, Saturn, Jupiter)","The sign order of rulers is the same 12 beats as the sign order"]},
+{n:"5",title:"One word per sign",tag:"The sign in a word",line:"Initiates, builds, connects, protects, expresses, refines, balances, transforms, expands, structures, detaches, dissolves.",
+ pts:["Aries initiates, Taurus builds, Gemini connects, Cancer protects","Leo expresses, Virgo refines, Libra balances, Scorpio transforms","Sagittarius expands, Capricorn structures, Aquarius detaches, Pisces dissolves"]},
+{n:"6",title:"One word per planet",tag:"The actor in a word",line:"Sun personality, Moon needs, Mercury mind, Venus values, Mars drive, Jupiter more, Saturn lessons, Uranus change, Neptune dreams, Pluto power.",
+ pts:["Ten planets, ten words","Jupiter is more, Saturn is less (limits)"]},
+{n:"7",title:"The reading line",tag:"What, how, where",line:"Planet is what. Sign is how. House is where.",
+ pts:["The planet is the actor, the sign the costume, the house the stage","Sun is personality, Rising is soul, Moon is feeling","Personality reacts, soul chooses"]},
+{n:"8",title:"Aspects by counting",tag:"Signs apart",line:"Sextile 2 signs apart, square 3, trine 4, opposition 6.",
+ pts:["Sextile 60°, square 90°, trine 120°, opposition 180°","Same element is a trine. Same mode is a square or opposition","Orbs: 10° with the Sun, Moon or Rising, 5° otherwise"]},
+{n:"9",title:"Houses",tag:"The stage",line:"House number is the sign number. Angles are 1, 4, 7, 10.",
+ pts:["1 self, 2 money, 3 mind, 4 home, 5 joy, 6 service","7 partner, 8 merge, 9 meaning, 10 career, 11 community, 12 hidden","The Sun's house matters most"]},
+{n:"10",title:"The transit ladder",tag:"Slow planets, heavy feel",line:"Jupiter a gift, Saturn a knock, Uranus a jolt, Neptune a fog, Pluto an oven.",
+ pts:["An outer planet within about 2° of the Sun, Rising or Midheaven is the big one","Jupiter orb about 5°. Saturn can last about a year","Years around: 12, 28 to 29, 84, 164, 248"]}
+];
+
 /* ---------- decks ---------- */
 const DECKS = {
+  core:{ label:"Core", items:CORE, plural:"card",
+    color:()=>ELCOLOR.Gold,
+    rail:b=>({html:b.n, title:b.title, color:ELCOLOR.Gold}),
+    counter:()=>"Core",
+    front:b=>front(b.n, b.title, b.tag, b.line).replace('class="glyph"','class="glyph num"'),
+    back:b=>`
+      ${bhead(b.n, b.title, "Core")}
+      ${block("Know cold", `<p class="lifelesson">${b.line}</p>`)}
+      ${block("Detail", bullets(b.pts))}`
+  },
   signs:{ label:"Signs", items:SIGNS, plural:"sign",
     color:s=>ELCOLOR[s.element],
     rail:s=>({html:s.glyph+VS, title:s.name, color:ELCOLOR[s.element]}),
@@ -568,7 +602,7 @@ const DECKS = {
 };
 
 /* ---------- engine ---------- */
-let deckKey = "signs", idx = 0, flipped = false;
+let deckKey = "core", idx = 0, flipped = false;
 const rail = document.getElementById('rail');
 const cardEl = document.getElementById('card');
 const frontEl = document.getElementById('front');
