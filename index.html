@@ -175,7 +175,7 @@ h1,h2,h3{font-family:var(--font-display);font-weight:600;text-wrap:balance;margi
 
 <script>
 const SIGNS = [
-{name:"Aries",pers:"Feisty push. Argues, loves to say you are wrong, does not know when to stop. Needs the rule: know when to stop.",soul:"Fighting for love. The pushiness is an attempt to make contact. Here to keep you awake and to be fully embodied.",hook:"1 = first. The Ram goes first. Number 1 is Fire (1 mod 4) and Cardinal.",glyph:"♈",symbol:"The Ram",element:"Fire",mode:"Cardinal",ruler:"Mars",rulerGlyph:"♂",house:"1st House",duality:"Masculine",polarity:"Libra",body:"Head, face",dates:"Mar 21 – Apr 19",
+{name:"Aries",pers:"Feisty push. Argues, loves to say you are wrong, does not know when to stop. Needs the rule: know when to stop.",soul:"Fighting for love. The pushiness is an attempt to make contact. Here to keep you awake and to be fully embodied.",hook:"1 = first. The Ram goes first. Number 1 is Fire and Cardinal.",glyph:"♈",symbol:"The Ram",element:"Fire",mode:"Cardinal",ruler:"Mars",rulerGlyph:"♂",house:"1st House",duality:"Masculine",polarity:"Libra",body:"Head, face",dates:"Mar 21 – Apr 19",
   tagline:"Initiates. Acts before it thinks things through.",
   signQ:["Initiating","Direct","Competitive","Impulsive","Courageous"],
   houseQ:["Identity","Self-image","First impressions","Initiative"],
@@ -437,7 +437,7 @@ function front(glyph, name, mono, tagline, extra){
 
 /* ---------- BASICS (class patterns and tricks) ---------- */
 const BASICS = [
-{n:"1",title:"Counting tricks",tag:"Signs by number",line:"Sign number mod 4 is the element. Mod 3 is the mode.",
+{n:"1",title:"Counting tricks",tag:"Signs by number",line:"Elements repeat in a cycle of four. Modes repeat in a cycle of three.",
  pts:["Element: 1 Fire, 2 Earth, 3 Air, 4 Water, then repeat (5 Fire, 6 Earth...)","Mode: 1 cardinal, 2 fixed, 3 mutable, then repeat","Houses mirror signs: house 5 is the Leo house","Angular houses 1, 4, 7, 10 are the cardinal numbers"]},
 {n:"2",title:"Aspects by counting",tag:"Signs apart",line:"Count signs apart to find the aspect.",
  pts:["Sextile: 2 apart (60°), same polarity","Square: 3 apart (90°), same mode","Trine: 4 apart (120°), same element","Opposition: 6 apart (180°)","Orbs: 10° when the Sun, Moon, or Rising is involved, 5° otherwise"]},
@@ -455,8 +455,8 @@ const BASICS = [
 const CORE = [
 {n:"1",title:"Sign order and numbers",tag:"Say a number, think the sign",line:"Aries 1 through Pisces 12.",
  pts:["1 Aries, 2 Taurus, 3 Gemini, 4 Cancer","5 Leo, 6 Virgo, 7 Libra, 8 Scorpio","9 Sagittarius, 10 Capricorn, 11 Aquarius, 12 Pisces","Drill: say 7, then say Libra"]},
-{n:"2",title:"Element and mode from the number",tag:"Two divisions",line:"Number ÷ 4 gives the element. Number ÷ 3 gives the mode.",
- pts:["÷ 4, remainder 1 fire, 2 earth, 3 air, 0 water","÷ 3, remainder 1 cardinal, 2 fixed, 0 mutable","Check: 7 is Libra. 7 ÷ 4 leaves 3 (air). 7 ÷ 3 leaves 1 (cardinal)"]},
+{n:"2",title:"Element and mode by counting",tag:"Two cycles",line:"Count down the signs in order. The elements and modes just repeat.",
+ pts:["Elements go Fire, Earth, Air, Water, then start over","Modes go Cardinal, Fixed, Mutable, then start over","Check: Libra is sign 7. Seven signs in, the elements are on Air and the modes on Cardinal"]},
 {n:"3",title:"Seven verbs",tag:"Element and mode in one word each",line:"Fire acts, Earth builds, Air connects, Water feels. Cardinal starts, Fixed holds, Mutable adapts.",
  pts:["Say mode first, then element: mutable earth is Virgo","The verbs tell look-alike signs apart"]},
 {n:"4",title:"Rulers, in sign order",tag:"Modern rulers",line:"Mars, Venus, Mercury, Moon, Sun, Mercury, Venus, Pluto, Jupiter, Saturn, Uranus, Neptune.",
@@ -540,7 +540,7 @@ const DECKS = {
       ${block("Ask yourself", `<p class="lifelesson">${e.ask}</p>`)}
       ${block("In the Moon", `<p class="lifelesson">${e.moon}</p>`)}
       ${block("Through the personal planets", bullets(e.planets))}
-      ${block("Memory hook", `<p class="lifelesson">${e.name==="Fire"?"Sign numbers 1, 5, 9. Element = sign number mod 4 (1 Fire, 2 Earth, 3 Air, 0 Water). Fire and Air are fast day energy; Earth and Water are slow night energy.":e.name==="Earth"?"Sign numbers 2, 6, 10. Earth is number 2 mod 4. Trines are 4 signs apart, so the Earth signs are 4 apart.":e.name==="Air"?"Sign numbers 3, 7, 11. Air is number 3 mod 4. Air feeds fire.":"Sign numbers 4, 8, 12. Water is number 0 mod 4. Water on earth makes fertile mud."}</p>`)}
+      ${block("Memory hook", `<p class="lifelesson">${e.name==="Fire"?"Sign numbers 1, 5, 9. Elements repeat down the signs: Fire, Earth, Air, Water. Fire and Air are fast day energy; Earth and Water are slow night energy.":e.name==="Earth"?"Sign numbers 2, 6, 10. Earth is the second sign in each round of four. Trines are 4 signs apart, so the Earth signs are 4 apart.":e.name==="Air"?"Sign numbers 3, 7, 11. Air is the third sign in each round of four. Air feeds fire.":"Sign numbers 4, 8, 12. Water is the fourth sign in each round of four. Water on earth makes fertile mud."}</p>`)}
       <p class="note">Counting planets in a chart: 4 or 5 or more is dominant, 2 to 3 is balanced, 0 to 1 is a singleton (underdeveloped, or already mastered).</p>`
     : `
       ${bhead(`<span class="pair sm">${elSvg(e.a,20)}<span class="plus">+</span>${elSvg(e.b,20)}</span>`, e.name, "Blend")}
@@ -596,7 +596,7 @@ const DECKS = {
       ${roads(m.high, m.low)}
       ${block("Conversations of the modes", bullets(m.says))}
       ${m.extra?block("Worth remembering", bullets(m.extra)):''}
-      ${block("Memory hook", `<p class="lifelesson">Mode = sign number mod 3: 1 is cardinal, 2 is fixed, 0 is mutable. Cardinal starts, fixed holds, mutable hands off.</p>`)}
+      ${block("Memory hook", `<p class="lifelesson">Modes repeat down the signs: cardinal, fixed, mutable. Cardinal starts, fixed holds, mutable hands off.</p>`)}
       <p class="note">Say mode first, then element, such as “mutable air.” When transiting Saturn is in the same mode as natal Saturn, a Saturn cycle is active. A grand cross is four planets in one mode.</p>`
   }
 };
