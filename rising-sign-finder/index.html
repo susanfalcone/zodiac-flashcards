@@ -1,0 +1,684 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Rising Sign Finder</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: one narrow column. A 12-sign horizon strip works as the progress device and the result display. */
+:root {
+  --bg: #EDF0F5;
+  --surface: #FFFFFF;
+  --ink: #1B2433;
+  --muted: #5A6678;
+  --line: #D2D9E4;
+  --accent: #1D6B75;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #DAECEE;
+  --sun: #B5612B;
+  --sun-soft: #F6E5D8;
+  --good: #2B7A4B;
+  --warn: #9A6200;
+  --bad: #B03A3A;
+  --f-display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", sans-serif;
+  --f-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1620; --surface: #172130; --ink: #E5EBF3; --muted: #93A0B3; --line: #2A3748;
+    --accent: #62B7C1; --accent-ink: #0B1A1D; --accent-soft: #1B3A40;
+    --sun: #E39A68; --sun-soft: #3B2A1F; --good: #6CC28D; --warn: #E0B04D; --bad: #E58080;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F1620; --surface: #172130; --ink: #E5EBF3; --muted: #93A0B3; --line: #2A3748;
+  --accent: #62B7C1; --accent-ink: #0B1A1D; --accent-soft: #1B3A40;
+  --sun: #E39A68; --sun-soft: #3B2A1F; --good: #6CC28D; --warn: #E0B04D; --bad: #E58080;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 16px; line-height: 1.5;
+  padding-block: 20px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; }
+h1 { font-family: var(--f-display); font-weight: 700; font-size: 1.9rem; letter-spacing: -0.01em; margin: 0; text-wrap: balance; }
+h2 { font-family: var(--f-display); font-weight: 700; font-size: 1.35rem; margin: 0; text-wrap: balance; line-height: 1.25; }
+h3 { font-family: var(--f-display); font-weight: 500; font-size: 1.05rem; margin: 0; }
+p { margin: 0; max-width: 65ch; }
+.muted { color: var(--muted); }
+.small { font-size: 0.875rem; }
+.eyebrow { font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+nav.tabs { display: flex; gap: 4px; }
+nav.tabs button { font: inherit; font-size: 0.875rem; background: none; border: 1px solid transparent; color: var(--muted); padding: 6px 12px; border-radius: 6px; cursor: pointer; }
+nav.tabs button[aria-current="page"] { color: var(--ink); border-color: var(--line); background: var(--surface); }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+.strip { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 3px; }
+.strip .cell { position: relative; text-align: center; padding: 8px 0 7px; border-radius: 4px; font-family: var(--f-mono); font-size: 0.6875rem; color: var(--muted); background: var(--surface); border: 1px solid var(--line); }
+.strip .cell.on { background: var(--accent-soft); color: var(--ink); border-color: var(--accent); }
+.strip .cell.top { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.strip .cell.sun::after { content: ""; position: absolute; left: 50%; bottom: -7px; width: 7px; height: 7px; margin-left: -3.5px; border-radius: 50%; background: var(--sun); }
+.strip-legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 0.75rem; color: var(--muted); }
+.strip-legend i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--sun); margin-right: 6px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+label, .label { font-weight: 600; font-size: 0.9375rem; }
+input[type="text"], input[type="date"], select {
+  font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; width: 100%; min-height: 44px;
+}
+input:focus-visible, select:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.btn { font: inherit; font-weight: 600; background: var(--accent); color: var(--accent-ink); border: 1px solid var(--accent); padding: 10px 18px; border-radius: 6px; cursor: pointer; min-height: 44px; }
+.btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); font-weight: 500; }
+.btn[disabled] { opacity: 0.45; cursor: not-allowed; }
+.opt { border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; background: var(--bg); }
+.opt.closest { border-color: var(--accent); background: var(--accent-soft); }
+.opt.also { border-color: var(--accent); border-style: dashed; }
+.opt .txt { min-width: 0; overflow-wrap: anywhere; }
+.opt .picks { display: flex; flex-wrap: wrap; gap: 8px; }
+.pick { font: inherit; font-size: 0.8125rem; font-weight: 500; background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; cursor: pointer; min-height: 36px; }
+.pick[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.none { align-self: flex-start; }
+.progress { font-family: var(--f-mono); font-size: 0.75rem; color: var(--muted); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.bar { height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.bar > span { display: block; height: 100%; background: var(--accent); }
+.rank { display: grid; gap: 10px; }
+.rank .r { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr) 3.5rem; gap: 10px; align-items: center; }
+.rank .r .nm { font-weight: 600; }
+.rank .r .sc { font-family: var(--f-mono); font-size: 0.8125rem; text-align: right; }
+.badge { display: inline-block; font-family: var(--f-mono); font-size: 0.75rem; padding: 3px 10px; border-radius: 999px; border: 1px solid currentColor; }
+.badge.strong { color: var(--good); }
+.badge.likely { color: var(--warn); }
+.badge.close { color: var(--bad); }
+.note { border-left: 3px solid var(--sun); background: var(--sun-soft); padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 0.9375rem; }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.875rem; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { font-family: var(--f-mono); font-size: 0.6875rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.hit { color: var(--good); font-weight: 600; } .near { color: var(--warn); font-weight: 600; } .miss { color: var(--bad); font-weight: 600; }
+.stats { display: flex; flex-wrap: wrap; gap: 8px 28px; }
+.stats div { display: flex; flex-direction: column; }
+.stats b { font-family: var(--f-display); font-size: 1.5rem; font-variant-numeric: tabular-nums; }
+.empty { text-align: left; }
+@media (prefers-reduced-motion: no-preference) { .bar > span { transition: width 0.4s ease; } }
+@media (max-width: 480px) { .rank .r { grid-template-columns: 5.5rem minmax(0, 1fr) 3rem; } h1 { font-size: 1.6rem; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Rising Sign Finder</h1>
+    <nav class="tabs" aria-label="Sections">
+      <button type="button" id="tab-quiz" aria-current="page">Quiz</button>
+      <button type="button" id="tab-log" hidden>Test log</button>
+    </nav>
+  </header>
+  <main id="app"></main>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- Data ---------- */
+  var SIGNS = [
+    { n: "Aries", a: "Ari", el: "fire", mo: "cardinal" }, { n: "Taurus", a: "Tau", el: "earth", mo: "fixed" },
+    { n: "Gemini", a: "Gem", el: "air", mo: "mutable" }, { n: "Cancer", a: "Can", el: "water", mo: "cardinal" },
+    { n: "Leo", a: "Leo", el: "fire", mo: "fixed" }, { n: "Virgo", a: "Vir", el: "earth", mo: "mutable" },
+    { n: "Libra", a: "Lib", el: "air", mo: "cardinal" }, { n: "Scorpio", a: "Sco", el: "water", mo: "fixed" },
+    { n: "Sagittarius", a: "Sag", el: "fire", mo: "mutable" }, { n: "Capricorn", a: "Cap", el: "earth", mo: "cardinal" },
+    { n: "Aquarius", a: "Aqu", el: "air", mo: "fixed" }, { n: "Pisces", a: "Pis", el: "water", mo: "mutable" }
+  ];
+  var ELS = ["fire", "earth", "air", "water"];
+  var MOS = ["cardinal", "fixed", "mutable"];
+
+  var WINDOWS = [
+    { label: "Around sunrise to mid-morning (about 5 to 8 am)", s: 5 },
+    { label: "Morning (about 8 to 11 am)", s: 8 },
+    { label: "Midday to early afternoon (about 11 am to 2 pm)", s: 11 },
+    { label: "Afternoon (about 2 to 5 pm)", s: 14 },
+    { label: "Evening (about 5 to 8 pm)", s: 17 },
+    { label: "Night (about 8 to 11 pm)", s: 20 },
+    { label: "Late night (about 11 pm to 2 am)", s: 23 },
+    { label: "Before dawn (about 2 to 5 am)", s: 2 }
+  ];
+
+  var HEAD = [
+    { id: "D1", w: 1, q: "In the first minute with one new person, you tend to...", lines: [
+      "Get straight to the point, say what is on your mind, and bring contagious enthusiasm",
+      "Be calm and courteous, a little shy at first, and not push your opinions",
+      "Talk with your hands, ask lots of questions, and move quickly between topics",
+      "Pick up how the other person feels right away, stay reserved, and let them close slowly",
+      "Be warm, big and funny, make the exchange feel like fun, and expect to be noticed",
+      "Be polite and a little shy, take everything in, and show less than you feel",
+      "Be gracious and easy to get along with, and make the other person feel comfortable",
+      "Be charming and witty, but let them do most of the talking while you quietly read them",
+      "Be frank and open, ask what they think about big ideas, and let them know exactly where you stand",
+      "Be quiet and reserved with strangers, serious, then lively and warm once you open up",
+      "Make friends easily, be lively and original in conversation, and feel fine standing out",
+      "Be friendly and sociable, taking on the mood of whoever you are with" ] },
+    { id: "D2", w: 1, q: "Walking into a room of strangers, you tend to...", lines: [
+      "Take charge: suggest where to go and what to do, and like being noticed",
+      "Find a comfortable, familiar spot and settle in without hurry",
+      "Move around the room, talk with many people briefly, and find it hard to sit still",
+      "Sense the mood of the room at once and stay near what feels safe before connecting with one or two people",
+      "Take up space, so people notice you and you take command of the room's energy",
+      "Take in everything, notice what is out of order, and start helping",
+      "Move through the room greeting people, making sure everyone feels included",
+      "Stay out of the spotlight, watch who is talking to whom, and file it away for later",
+      "Head for the liveliest conversation, make friends quickly, and get restless if it stays shallow",
+      "Stay a little apart, composed, and look for the useful conversation",
+      "Mix easily but stay slightly apart, drawn to the unusual person or idea",
+      "Soak up the atmosphere, get lively once warmed up, and sometimes drift into your own world" ] },
+    { id: "D3", w: 0.75, q: "When someone you do not know well criticizes you or openly disagrees with you, your first reaction is to...", lines: [
+      "Push back right away and say it plainly",
+      "Dig in and stay put, slow to anger, and not forgive being ridiculed",
+      "React quickly, talk your way through it, and bounce back fast",
+      "Turn touchy or snappish, then pull back to protect yourself",
+      "Put on a regal air and make it clear the other person has dropped in your esteem",
+      "Get nervous and critical: point out the errors and fix the details",
+      "Stay agreeable and say little for a long time, then react all at once",
+      "Stay cool until crossed, then go for the win with ridicule or biting words, and regret it later",
+      "Say the blunt truth right away, then react fast without weighing where it will lead",
+      "Go stoic and formal, hide the resentment, and not forget the injury",
+      "Step back, get sarcastic or funny, and hold your position",
+      "Take on the tension, get moody or overwhelmed, or retreat into your own world" ] },
+    { id: "D4", w: 0.5, q: "How do you think you come across to people?", lines: [
+      "Warm, optimistic, a can-do person who moves fast",
+      "Kind, gentle, someone people can count on",
+      "Easy to talk to, curious, and versatile",
+      "Reserved at first, dependable, a safe place for others",
+      "Warm, confident, a natural leader",
+      "Organized, efficient, and dependable",
+      "Polished, gracious, someone who has it together",
+      "Intense and composed, with a lot going on underneath, and a little hard to read",
+      "Open, cheerful and honest, full of big ideas, and a bit restless",
+      "Capable, in charge, someone who gets things done",
+      "Original, ahead of the curve, a bit unconventional",
+      "Gentle, sensitive, intuitive" ] },
+    { id: "D5", w: 1, q: "How would a friend describe the way you move and carry yourself?", lines: [
+      "Quick and energetic, always in a rush, and sometimes bumping into things",
+      "Slow, steady and solid, never in a hurry",
+      "Always moving: talking with your hands, eyes darting around, hard to sit still",
+      "Easygoing and unhurried, with a relaxed, rolling walk",
+      "Upright and dignified, with a proud, confident bearing",
+      "Modest and gentle, taking in everything around you with a sweep of your eyes",
+      "Graceful and balanced, with a warm, easy smile",
+      "Quick and decisive when you move, with a steady, intense gaze",
+      "Big gestures with your arms and hands, and an active, energetic body",
+      "Composed and deliberate, moving at a steady, sure pace",
+      "A faraway, thoughtful look, but very animated when talking about an idea",
+      "Soft and flowing, with a dreamy look that sometimes drifts away" ] },
+    { id: "D6a", w: 1.5, q: "What have strangers or new acquaintances said about their first impression of you? Use real remarks if you remember any.", lines: [
+      "Direct, enthusiastic, hard to keep up with",
+      "Calm, kind, easygoing",
+      "Restless, quick, talkative",
+      "Reserved, kind, hard to get close to at first",
+      "Warm, magnetic, a natural leader",
+      "Organized, modest, a little aloof",
+      "Polished, charming, like they have it together",
+      "Wise beyond their years, intense, observant, and hard to read",
+      "Friendly, jovial, frank, full of big ideas, and always on the move",
+      "Capable, serious, a leader who knows what they are doing",
+      "Original, ahead of the curve, hard to categorize",
+      "Sensitive, intuitive, gentle" ] },
+    { id: "D6b", w: 1.5, q: "What do people often get wrong about you at first?", lines: [
+      "People think you are too fast and forceful, when you are really warm and full of energy",
+      "People see you as endlessly helpful, and overlook that you have needs of your own",
+      "People think you are flighty or not sincere, when you are really just curious",
+      "People think you are a homebody who keeps things close, when you simply need to trust someone before you open up",
+      "People think you just love the spotlight, when you are also lifting others up",
+      "People think you are nitpicky, when you just cannot stand excess and want everything to have a purpose",
+      "People assume you have it all together and are always available to them",
+      "People think you are guarded or cold, when you really feel everything deeply",
+      "People think you cannot be pinned down, when you are really driven by freedom",
+      "People think you are arrogant or no fun, when you are putting in long hours behind the scenes",
+      "People are not sure what to make of you, when you are really ahead of the curve",
+      "People think you are spacey or easily overwhelmed, when you are really sensing what lies beneath the surface" ] }
+  ];
+  var MAX_SCORE = HEAD.reduce(function (s, d) { return s + d.w * 2; }, 0);
+
+  /* ---------- Logic ---------- */
+  var SCREEN = ["D1", "D3", "D6a"];
+  function screenSeq() { return HEAD.filter(function (d) { return SCREEN.indexOf(d.id) >= 0; }).map(function (d) { return { kind: "S", d: d }; }); }
+  function sunIndex(y, m, d) {
+    var n = (Date.UTC(y, m - 1, d, 12) - Date.UTC(2000, 0, 1, 12)) / 86400000;
+    var rad = Math.PI / 180;
+    var L = 280.460 + 0.9856474 * n, g = (357.528 + 0.9856003 * n) * rad;
+    var lam = ((L + 1.915 * Math.sin(g) + 0.020 * Math.sin(2 * g)) % 360 + 360) % 360;
+    var into = lam % 30;
+    return { idx: Math.floor(lam / 30), cusp: into < 1 || into > 29 };
+  }
+  var CITY_DATA = "New York, NY|40.71|-74.01|America/New_York;Los Angeles, CA|34.05|-118.24|America/Los_Angeles;Chicago, IL|41.88|-87.63|America/Chicago;Houston, TX|29.76|-95.37|America/Chicago;Phoenix, AZ|33.45|-112.07|America/Phoenix;Philadelphia, PA|39.95|-75.17|America/New_York;San Antonio, TX|29.42|-98.49|America/Chicago;San Diego, CA|32.72|-117.16|America/Los_Angeles;Dallas, TX|32.78|-96.80|America/Chicago;San Jose, CA|37.34|-121.89|America/Los_Angeles;Austin, TX|30.27|-97.74|America/Chicago;Jacksonville, FL|30.33|-81.66|America/New_York;Columbus, OH|39.96|-83.00|America/New_York;Charlotte, NC|35.23|-80.84|America/New_York;San Francisco, CA|37.77|-122.42|America/Los_Angeles;Indianapolis, IN|39.77|-86.16|America/Indiana/Indianapolis;Seattle, WA|47.61|-122.33|America/Los_Angeles;Denver, CO|39.74|-104.99|America/Denver;Lone Tree, CO|39.55|-104.87|America/Denver;Aurora, CO|39.73|-104.83|America/Denver;Boulder, CO|40.01|-105.27|America/Denver;Fort Collins, CO|40.59|-105.08|America/Denver;Colorado Springs, CO|38.83|-104.82|America/Denver;Woodbury, NJ|39.84|-75.15|America/New_York;Newark, NJ|40.74|-74.17|America/New_York;Trenton, NJ|40.22|-74.76|America/New_York;Wilmington, DE|39.74|-75.55|America/New_York;Washington, DC|38.91|-77.04|America/New_York;Boston, MA|42.36|-71.06|America/New_York;El Paso, TX|31.76|-106.49|America/Denver;Nashville, TN|36.16|-86.78|America/Chicago;Detroit, MI|42.33|-83.05|America/Detroit;Oklahoma City, OK|35.47|-97.52|America/Chicago;Portland, OR|45.52|-122.68|America/Los_Angeles;Las Vegas, NV|36.17|-115.14|America/Los_Angeles;Memphis, TN|35.15|-90.05|America/Chicago;Louisville, KY|38.25|-85.76|America/Kentucky/Louisville;Baltimore, MD|39.29|-76.61|America/New_York;Milwaukee, WI|43.04|-87.91|America/Chicago;Albuquerque, NM|35.08|-106.65|America/Denver;Tucson, AZ|32.22|-110.97|America/Phoenix;Fresno, CA|36.74|-119.79|America/Los_Angeles;Sacramento, CA|38.58|-121.49|America/Los_Angeles;Kansas City, MO|39.10|-94.58|America/Chicago;Atlanta, GA|33.75|-84.39|America/New_York;Omaha, NE|41.26|-95.93|America/Chicago;Raleigh, NC|35.78|-78.64|America/New_York;Miami, FL|25.76|-80.19|America/New_York;Minneapolis, MN|44.98|-93.27|America/Chicago;Tulsa, OK|36.15|-95.99|America/Chicago;Cleveland, OH|41.50|-81.69|America/New_York;New Orleans, LA|29.95|-90.07|America/Chicago;Tampa, FL|27.95|-82.46|America/New_York;Orlando, FL|28.54|-81.38|America/New_York;Honolulu, HI|21.31|-157.86|Pacific/Honolulu;Anchorage, AK|61.22|-149.90|America/Anchorage;Salt Lake City, UT|40.76|-111.89|America/Denver;Pittsburgh, PA|40.44|-79.99|America/New_York;Cincinnati, OH|39.10|-84.51|America/New_York;St. Louis, MO|38.63|-90.20|America/Chicago;Boise, ID|43.62|-116.20|America/Boise;Buffalo, NY|42.89|-78.88|America/New_York;Richmond, VA|37.54|-77.44|America/New_York;Hartford, CT|41.76|-72.68|America/New_York;Providence, RI|41.82|-71.41|America/New_York;Des Moines, IA|41.59|-93.62|America/Chicago;Little Rock, AR|34.75|-92.29|America/Chicago;Birmingham, AL|33.52|-86.80|America/Chicago;Charleston, SC|32.78|-79.93|America/New_York;Toronto, Canada|43.65|-79.38|America/Toronto;Montreal, Canada|45.50|-73.57|America/Toronto;Vancouver, Canada|49.28|-123.12|America/Vancouver;Calgary, Canada|51.05|-114.07|America/Edmonton;Edmonton, Canada|53.55|-113.49|America/Edmonton;Ottawa, Canada|45.42|-75.70|America/Toronto;Winnipeg, Canada|49.90|-97.14|America/Winnipeg;Halifax, Canada|44.65|-63.57|America/Halifax;Mexico City, Mexico|19.43|-99.13|America/Mexico_City;London, UK|51.51|-0.13|Europe/London;Manchester, UK|53.48|-2.24|Europe/London;Edinburgh, UK|55.95|-3.19|Europe/London;Dublin, Ireland|53.35|-6.26|Europe/Dublin;Paris, France|48.86|2.35|Europe/Paris;Berlin, Germany|52.52|13.40|Europe/Berlin;Madrid, Spain|40.42|-3.70|Europe/Madrid;Rome, Italy|41.90|12.50|Europe/Rome;Amsterdam, Netherlands|52.37|4.90|Europe/Amsterdam;Stockholm, Sweden|59.33|18.07|Europe/Stockholm;Athens, Greece|37.98|23.73|Europe/Athens;Lisbon, Portugal|38.72|-9.14|Europe/Lisbon;Vienna, Austria|48.21|16.37|Europe/Vienna;Zurich, Switzerland|47.38|8.54|Europe/Zurich;Moscow, Russia|55.76|37.62|Europe/Moscow;Tokyo, Japan|35.68|139.69|Asia/Tokyo;Seoul, South Korea|37.57|126.98|Asia/Seoul;Beijing, China|39.90|116.41|Asia/Shanghai;Shanghai, China|31.23|121.47|Asia/Shanghai;Hong Kong|22.32|114.17|Asia/Hong_Kong;Singapore|1.35|103.82|Asia/Singapore;Mumbai, India|19.08|72.88|Asia/Kolkata;Delhi, India|28.61|77.21|Asia/Kolkata;Bangkok, Thailand|13.76|100.50|Asia/Bangkok;Dubai, UAE|25.20|55.27|Asia/Dubai;Tel Aviv, Israel|32.09|34.78|Asia/Jerusalem;Manila, Philippines|14.60|120.98|Asia/Manila;Sydney, Australia|-33.87|151.21|Australia/Sydney;Melbourne, Australia|-37.81|144.96|Australia/Melbourne;Auckland, New Zealand|-36.85|174.76|Pacific/Auckland;Sao Paulo, Brazil|-23.55|-46.63|America/Sao_Paulo;Buenos Aires, Argentina|-34.60|-58.38|America/Argentina/Buenos_Aires;Bogota, Colombia|4.71|-74.07|America/Bogota;Lima, Peru|-12.05|-77.04|America/Lima;Cairo, Egypt|30.04|31.24|Africa/Cairo;Johannesburg, South Africa|-26.20|28.05|Africa/Johannesburg;Lagos, Nigeria|6.52|3.38|Africa/Lagos;Nairobi, Kenya|-1.29|36.82|Africa/Nairobi";
+  var CITIES = CITY_DATA.split(";").map(function (r) { var f = r.split("|"); return { name: f[0], lat: +f[1], lon: +f[2], tz: f[3] }; });
+
+  function tzOffset(ms, tz) {
+    var f = new Intl.DateTimeFormat("en-US", { timeZone: tz, hourCycle: "h23", year: "numeric", month: "numeric", day: "numeric", hour: "numeric", minute: "numeric", second: "numeric" });
+    var o = {};
+    f.formatToParts(new Date(ms)).forEach(function (x) { o[x.type] = +x.value; });
+    var base = Math.floor(ms / 1000) * 1000;
+    return Date.UTC(o.year, o.month - 1, o.day, o.hour % 24, o.minute, o.second) - base;
+  }
+  function localToUtc(y, m, d, mins, tz) {
+    var guess = Date.UTC(y, m - 1, d, 0, mins);
+    var u = guess - tzOffset(guess, tz);
+    return guess - tzOffset(u, tz);
+  }
+  function ascSign(utcMs, lat, lon) {
+    var rad = Math.PI / 180;
+    var jd = utcMs / 86400000 + 2440587.5, d = jd - 2451545.0, T = d / 36525;
+    var gmst = 280.46061837 + 360.98564736629 * d + 0.000387933 * T * T;
+    var lst = (((gmst + lon) % 360) + 360) % 360 * rad;
+    var eps = (23.439291 - 0.0130042 * T) * rad, phi = lat * rad;
+    var asc = Math.atan2(Math.cos(lst), -(Math.sin(lst) * Math.cos(eps) + Math.tan(phi) * Math.sin(eps))) / rad;
+    asc = ((asc % 360) + 360) % 360;
+    return Math.floor(asc / 30);
+  }
+  function windowCandidates(y, m, d, startH, place) {
+    var buffers = [60, 45, 30, 15, 0], out = [];
+    for (var b = 0; b < buffers.length; b++) {
+      var set = [], t0 = startH * 60 - buffers[b], t1 = (startH + 3) * 60 + buffers[b];
+      for (var t = t0; t <= t1; t += 10) {
+        var s = ascSign(localToUtc(y, m, d, t, place.tz), place.lat, place.lon);
+        if (set.indexOf(s) < 0) set.push(s);
+      }
+      out = set;
+      if (set.length <= 4) break;
+    }
+    return out;
+  }
+  function signsBetween(y, m, d, startH, hours, place) {
+    var set = [];
+    for (var t = startH * 60 - 30; t <= (startH + hours) * 60 + 30; t += 10) {
+      var x = ascSign(localToUtc(y, m, d, t, place.tz), place.lat, place.lon);
+      if (set.indexOf(x) < 0) set.push(x);
+    }
+    return set;
+  }
+  function shuffle(a) {
+    var r = a.slice();
+    for (var i = r.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = r[i]; r[i] = r[j]; r[j] = t; }
+    return r;
+  }
+  function scoreRun(S) {
+    var score = {}; S.cands.forEach(function (c) { score[c] = 0; });
+    var none = 0, sunPicks = 0;
+    HEAD.forEach(function (d) {
+      var p = S.ans[d.id] || {};
+      if (p.none) { none++; return; }
+      [["c", 2], ["a", 1]].forEach(function (pair) {
+        var k = p[pair[0]];
+        if (k == null) return;
+        if (score[k] != null) score[k] += pair[1] * d.w;
+        else if (k === S.sun) sunPicks++;
+      });
+    });
+    var rank = S.cands.map(function (c) { return { sign: c, score: score[c] }; }).sort(function (a, b) { return b.score - a.score; });
+    var margin = rank.length > 1 ? (rank[0].score - rank[1].score) / MAX_SCORE : 1;
+    var label = margin >= 0.25 ? "Strong" : margin >= 0.10 ? "Likely" : "Too close to call";
+    var sunTop = rank[0].sign === S.sun;
+    if (sunTop && label === "Strong") label = "Likely";
+    return { rank: rank, margin: margin, label: label, none: none, sunPicks: sunPicks, sunTop: sunTop };
+  }
+
+  /* ---------- DOM helpers ---------- */
+  function h(tag, props) {
+    var e = document.createElement(tag), kids = Array.prototype.slice.call(arguments, 2);
+    Object.keys(props || {}).forEach(function (k) {
+      var v = props[k];
+      if (k === "class") e.className = v;
+      else if (k === "text") e.textContent = v;
+      else if (k.indexOf("on") === 0) e.addEventListener(k.slice(2), v);
+      else if (v === true) e.setAttribute(k, "");
+      else if (v !== false && v != null) e.setAttribute(k, v);
+    });
+    (function add(list) {
+      list.forEach(function (kid) {
+        if (kid == null || kid === false) return;
+        if (Array.isArray(kid)) return add(kid);
+        e.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
+      });
+    })(kids);
+    return e;
+  }
+  function strip(opts) {
+    var cells = SIGNS.map(function (s, i) {
+      var cls = "cell";
+      if ((opts.cands || []).indexOf(i) >= 0) cls += " on";
+      if (opts.top === i) cls += " top";
+      if (opts.sun === i) cls += " sun";
+      return h("div", { class: cls, title: s.n, text: s.a });
+    });
+    var legend = h("div", { class: "strip-legend" },
+      opts.sun != null ? h("span", {}, h("i"), "Your sun sign: " + SIGNS[opts.sun].n) : null,
+      opts.cands && opts.cands.length ? h("span", { text: "Highlighted: candidate rising signs" }) : null);
+    return h("div", { style: "display:flex;flex-direction:column;gap:12px;padding-bottom:6px" }, h("div", { class: "strip", role: "img", "aria-label": "The twelve signs" }, cells), legend);
+  }
+
+  /* ---------- State ---------- */
+  var app = document.getElementById("app");
+  var db = null, canWrite = true, canEdit = false, logUnsub = null;
+  var S;
+  function fresh() {
+    return { screen: "setup", label: "", sun: null, cusp: false, windowIdx: null, path: null, seq: [], qi: 0,
+      ans: {}, shuf: {}, cands: [], el: null, mo: null, added: null, result: null, saved: null, knownRising: "" };
+  }
+  S = fresh();
+
+  /* ---------- Screens ---------- */
+  function renderSetup() {
+    var dateIn = h("input", { type: "date", id: "f-date", min: "1900-01-01", max: new Date().toISOString().slice(0, 10), required: true });
+    var labelIn = h("input", { type: "text", id: "f-label", maxlength: "40", placeholder: "Optional, for the test log" });
+    var sel = h("select", { id: "f-window" },
+      h("option", { value: "" }, "Choose one"),
+      WINDOWS.map(function (w, i) { return h("option", { value: String(i) }, w.label); }),
+      h("option", { value: "day" }, "Daytime, not sure of the hours (about 6 am to 6 pm)"),
+      h("option", { value: "night" }, "Night, not sure of the hours (about 6 pm to 6 am)"),
+      h("option", { value: "none" }, "I have no idea"));
+    var placeIn = h("input", { type: "text", id: "f-place", list: "cities", autocomplete: "off", placeholder: "Start typing a city" });
+    var dl = h("datalist", { id: "cities" }, CITIES.map(function (c) { return h("option", { value: c.name }); }));
+    var nearSel = h("select", { id: "f-near" }, h("option", { value: "" }, "Pick the nearest larger city"),
+      CITIES.slice().sort(function (x, y) { return x.name < y.name ? -1 : 1; }).map(function (c) { return h("option", { value: c.name }, c.name); }));
+    function byName(n) { for (var i = 0; i < CITIES.length; i++) if (CITIES[i].name.toLowerCase() === n.toLowerCase()) return CITIES[i]; return null; }
+    function resolvePlace() {
+      var typed = placeIn.value.trim();
+      var hit = typed && byName(typed);
+      if (hit) return hit;
+      var near = nearSel.value && byName(nearSel.value);
+      if (near) return { name: (typed || near.name) + (typed ? " (near " + near.name + ")" : ""), lat: near.lat, lon: near.lon, tz: near.tz };
+      return null;
+    }
+    var err = h("p", { class: "small", style: "color:var(--bad)", role: "alert" });
+    var go = h("button", { class: "btn", type: "button", onclick: function () {
+      err.textContent = "";
+      var v = dateIn.value;
+      if (!v) { err.textContent = "Enter your birth date."; return; }
+      var parts = v.split("-").map(Number);
+      if (parts[0] < 1900 || new Date(v) > new Date()) { err.textContent = "Enter a valid past date."; return; }
+      if (!sel.value) { err.textContent = "Choose a time of day, or pick I have no idea."; return; }
+      var place = resolvePlace();
+      if (sel.value !== "none" && !place) { err.textContent = "Choose your birthplace from the list, or pick the nearest larger city, so the time window can be converted to rising signs."; return; }
+      var sun = sunIndex(parts[0], parts[1], parts[2]);
+      S = fresh();
+      S.label = labelIn.value.trim();
+      S.sun = sun.idx; S.cusp = sun.cusp;
+      var coarse = sel.value === "day" || sel.value === "night";
+      if (sel.value === "none" || coarse) {
+        S.path = "notime";
+        S.seq = screenSeq();
+        if (coarse) { S.daypart = sel.value; S.pool = signsBetween(parts[0], parts[1], parts[2], sel.value === "day" ? 6 : 18, 12, place); }
+      } else {
+        S.path = "window"; S.windowIdx = Number(sel.value);
+        S.cands = windowCandidates(parts[0], parts[1], parts[2], WINDOWS[S.windowIdx].s, place);
+        S.seq = HEAD.map(function (d) { return { kind: "H", d: d }; });
+      }
+      S.place = place;
+      S.screen = "q";
+      render();
+    } }, "Start");
+    return h("section", { class: "card" },
+      h("p", { class: "eyebrow", text: "Before you begin" }),
+      h("h2", { text: "Estimate your rising sign when you do not know your birth time" }),
+      h("p", { text: "You answer questions about how you come across to other people. The tool narrows the field to a few signs, then compares them head to head. The result is an estimate with a confidence level, not a chart." }),
+      h("p", { class: "small muted", text: "This is a test version. Your answers stay on your device unless you choose to send your result at the end." }),
+      h("p", { class: "note", text: "First check your birth certificate or hospital record, or ask a parent. Some list the exact time, and then you do not need this." }),
+      h("div", { class: "field" }, h("label", { for: "f-date", text: "Birth date" }), dateIn),
+      h("div", { class: "field" }, h("label", { for: "f-window", text: "Roughly what time of day were you born?" }), sel),
+      h("div", { class: "field" }, h("label", { for: "f-place", text: "Birthplace" }), placeIn, dl,
+        h("p", { class: "small muted", text: "The same clock hour gives a different rising sign in different places, so this sets which signs fit your time window." })),
+      h("div", { class: "field" }, h("label", { for: "f-near", text: "Not in the list? Choose the nearest larger city" }), nearSel,
+        h("p", { class: "small muted", text: "Anything within about 50 miles works. Type your own town above if you like; the nearest city is what sets the calculation." })),
+      h("div", { class: "field" }, h("label", { for: "f-label", text: "Name or label" }), labelIn),
+      err,
+      h("div", { class: "row" }, go));
+  }
+
+  function optionsFor(item) {
+    var id = item.d.id;
+    if (item.kind === "S") {
+      if (!S.shuf[id]) S.shuf[id] = shuffle(S.pool ? S.pool.slice() : SIGNS.map(function (x, i) { return i; }));
+    } else if (!S.shuf[id]) {
+      var list = S.cands.slice();
+      if (list.indexOf(S.sun) < 0) list.push(S.sun);
+      S.shuf[id] = shuffle(list);
+    }
+    return S.shuf[id].map(function (c) { return { key: c, text: item.d.lines[c] }; });
+  }
+
+  function renderQuestion() {
+    var item = S.seq[S.qi], id = item.d.id;
+    var p = S.ans[id] || (S.ans[id] = { c: null, a: null, none: false });
+    var opts = optionsFor(item);
+    var total = S.seq.length;
+    var pct = Math.round((S.qi / total) * 100);
+    var nextBtn = h("button", { class: "btn", type: "button", id: "next", disabled: !(p.c != null || p.none), onclick: function () {
+      if (S.qi + 1 < total) { S.qi++; render(); return; }
+      if (item.kind === "S") { goCandidates(); } else { finish(); }
+    } }, (S.qi + 1 === total && item.kind === "S") ? "Continue" : (S.qi + 1 === total ? "See result" : "Next"));
+    function update() { render(); }
+    var list = opts.map(function (o) {
+      var isC = p.c === o.key, isA = p.a === o.key;
+      return h("div", { class: "opt" + (isC ? " closest" : isA ? " also" : "") },
+        h("div", { class: "txt", text: o.text }),
+        h("div", { class: "picks" },
+          h("button", { class: "pick", type: "button", "aria-pressed": isC ? "true" : "false", onclick: function () {
+            p.none = false; if (p.a === o.key) p.a = null; p.c = isC ? null : o.key; update(); } }, "Closest"),
+          h("button", { class: "pick", type: "button", "aria-pressed": isA ? "true" : "false", onclick: function () {
+            p.none = false; if (p.c === o.key) p.c = null; p.a = isA ? null : o.key; update(); } }, "Also fits")));
+    });
+    var showNone = true;
+    var noneBtn = showNone ? h("button", { class: "pick none", type: "button", "aria-pressed": p.none ? "true" : "false", onclick: function () {
+      p.none = !p.none; if (p.none) { p.c = null; p.a = null; } update(); } }, "None of these fit") : null;
+    var label = item.kind === "S" ? "Part 1 of 2: first impressions" : (S.path === "notime" ? "Part 2 of 2: head to head" : "Head to head");
+    return h("section", { class: "card" },
+      h("div", { class: "progress" }, h("span", { text: label }), h("span", { text: "Question " + (S.qi + 1) + " of " + total })),
+      h("div", { class: "bar", role: "progressbar", "aria-valuemin": "0", "aria-valuemax": "100", "aria-valuenow": String(pct) }, h("span", { style: "width:" + pct + "%" })),
+      h("h2", { text: item.d.q }),
+      item.d.exp ? h("p", { class: "small muted", text: "This one does not change your result. It is here so we can test whether it helps." }) : null,
+      h("p", { class: "small muted", text: "Pick the closest line. You can also mark one more that fits." }),
+      h("div", { style: "display:flex;flex-direction:column;gap:10px" }, list),
+      noneBtn,
+      h("div", { class: "row" },
+        h("button", { class: "btn ghost", type: "button", onclick: function () {
+          if (S.qi > 0) { S.qi--; render(); }
+          else if (item.kind === "H" && S.path === "notime") { S.seq = screenSeq(); S.qi = S.seq.length - 1; render(); }
+          else { var l = S.label; S = fresh(); S.label = l; render(); } } }, "Back"),
+        nextBtn));
+  }
+
+  function goCandidates() {
+    var pool = S.pool || SIGNS.map(function (x, i) { return i; });
+    var sc = {}, cl = {};
+    pool.forEach(function (i) { sc[i] = 0; cl[i] = 0; });
+    screenSeq().forEach(function (it) {
+      var p = S.ans[it.d.id] || {};
+      if (p.none) return;
+      if (p.c != null && sc[p.c] != null) { sc[p.c] += 2 * it.d.w; cl[p.c]++; }
+      if (p.a != null && sc[p.a] != null) sc[p.a] += it.d.w;
+    });
+    var ranked = pool.slice().sort(function (x, y) { return (sc[y] - sc[x]) || (cl[y] - cl[x]) || (x - y); });
+    var pos = ranked.filter(function (i) { return sc[i] > 0; });
+    S.cands = (pos.length >= 2 ? pos : ranked).slice(0, 4);
+    S.screenScores = {};
+    pool.forEach(function (i) { S.screenScores[SIGNS[i].n] = sc[i]; });
+    HEAD.forEach(function (d) { if (SCREEN.indexOf(d.id) < 0) { delete S.shuf[d.id]; delete S.ans[d.id]; } });
+    startHead();
+  }
+  function startHead() {
+    S.seq = HEAD.filter(function (d) { return S.path !== "notime" || SCREEN.indexOf(d.id) < 0; }).map(function (d) { return { kind: "H", d: d }; });
+    S.qi = 0; S.screen = "q"; render();
+  }
+  function finish() {
+    S.result = scoreRun(S); S.screen = "result"; render();
+  }
+
+  function renderResult() {
+    var R = S.result, top = R.rank[0], second = R.rank[1];
+    var cls = R.label === "Strong" ? "strong" : R.label === "Likely" ? "likely" : "close";
+    var headline = R.label === "Too close to call"
+      ? SIGNS[top.sign].n + " and " + SIGNS[second.sign].n + " are too close to call"
+      : SIGNS[top.sign].n + " rising fits your answers best";
+    var max = Math.max.apply(null, R.rank.map(function (r) { return r.score; })) || 1;
+    var bars = R.rank.map(function (r) {
+      return h("div", { class: "r" },
+        h("span", { class: "nm", text: SIGNS[r.sign].n }),
+        h("div", { class: "bar" }, h("span", { style: "width:" + Math.round((r.score / max) * 100) + "%" })),
+        h("span", { class: "sc", text: r.score.toFixed(1) }));
+    });
+    var d6a = HEAD.filter(function (d) { return d.id === "D6a"; })[0];
+    var tie = R.label === "Too close to call";
+    var knownSel = h("select", { id: "f-known" },
+      h("option", { value: "" }, "I do not know it"),
+      SIGNS.map(function (s) { return h("option", { value: s.n }, s.n); }));
+    knownSel.value = S.knownRising;
+    var saveBtn = h("button", { class: "btn", type: "button", id: "save", onclick: function () { sendRun(knownSel.value, msg); } }, S.sentText ? "Send again" : "Send my result");
+    var msg = h("p", { class: "small", role: "status", text: S.saved || "" });
+    var box = S.sentText ? h("textarea", { readonly: true, rows: "7", "aria-label": "Your result, to copy", style: "width:100%;font:12px ui-monospace,Menlo,monospace;padding:8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)", onfocus: function (e) { e.target.select(); } }) : null;
+    if (box) box.value = S.sentText;
+    return h("section", { style: "display:flex;flex-direction:column;gap:20px" },
+      h("div", { class: "card" },
+        h("div", { class: "row", style: "justify-content:space-between" },
+          h("p", { class: "eyebrow", text: "Your result" }),
+          h("span", { class: "badge " + cls, text: R.label })),
+        h("h2", { text: headline }),
+        strip({ cands: S.cands, sun: S.sun, top: tie ? null : top.sign }),
+        h("div", { class: "rank" }, bars),
+        h("p", { text: SIGNS[top.sign].n + " is " + SIGNS[top.sign].el + ", " + SIGNS[top.sign].mo + ". People often describe this rising sign this way: " + d6a.lines[top.sign].toLowerCase() + "." }),
+        R.sunTop ? h("p", { class: "note", text: "Your sun sign came out on top. These questions cannot fully separate sun from rising, so treat this as a lean, not a finding." }) : null,
+        R.none >= 3 ? h("p", { class: "note", text: "You chose none of these fit on " + R.none + " questions, so the right sign may not be among the candidates." }) : null,
+        h("p", { class: "small muted", text: "A rising sign description is not a description of you. You are a blend of sun, moon and rising. Only a chart with your real birth time gives the exact answer." })),
+      tie ? h("div", { class: "card" },
+        h("h3", { text: "Ways to break the tie" }),
+        h("p", { text: "Show a friend who met you as an adult these two first impressions and ask which sounds like how you came across at first:" }),
+        h("ul", { style: "margin:0;padding-left:20px" }, [top.sign, second.sign].map(function (c) { return h("li", { text: d6a.lines[c] }); })),
+        h("p", { text: "A certified astrologer can also work out a birth time from the dates of major life events. This is called chart rectification." })) : null,
+      h("div", { class: "card" },
+        h("h3", { text: "Help test this tool" }),
+        h("p", { class: "small muted", text: "If you know your real rising sign from a birth chart, pick it. Then send your result to Susan so she can see how well the tool did. The message includes your answers and your birth city, but not your birth date." }),
+        h("div", { class: "field" }, h("label", { for: "f-known", text: "Actual rising sign" }), knownSel),
+        h("div", { class: "row" }, saveBtn,
+          h("button", { class: "btn ghost", type: "button", onclick: function () { S = fresh(); render(); } }, "Start over")),
+        msg, box));
+  }
+
+  function sendRun(known, msg) {
+    var R = S.result;
+    var answers = {};
+    Object.keys(S.ans).forEach(function (k) {
+      var p = S.ans[k];
+      answers[k] = { c: p.c, a: p.a, none: !!p.none };
+    });
+    var doc = {
+      v: 1, bank: 5, screening: S.screenScores || null, sunTop: R.sunTop, daypart: S.daypart || null, createdAt: Date.now(), label: S.label, sun: SIGNS[S.sun].n, cusp: S.cusp, path: S.path,
+      window: S.windowIdx != null ? WINDOWS[S.windowIdx].label : null,
+      place: S.place ? S.place.name : null,
+      candidates: S.cands.map(function (c) { return SIGNS[c].n; }),
+      elementScores: S.el, modeScores: S.mo,
+      ranking: R.rank.map(function (r) { return { sign: SIGNS[r.sign].n, score: r.score }; }),
+      margin: Math.round(R.margin * 1000) / 1000, confidence: R.label, noneCount: R.none, sunPicks: R.sunPicks,
+      answers: answers, known: known || null
+    };
+    S.knownRising = known;
+    var top = R.rank[0], sec = R.rank[1];
+    var text = "Rising Sign Finder result\nTop match: " + SIGNS[top.sign].n + " (" + R.label + ")" + (sec ? ". Runner-up: " + SIGNS[sec.sign].n : "") +
+      "\nSun sign: " + SIGNS[S.sun].n + ". Path: " + (S.path === "window" ? "time window" : "no time") + ". Actual rising: " + (known || "not known") +
+      "\nRSF1:" + JSON.stringify(doc);
+    S.sentText = text;
+    S.saved = "Copied. Paste it into a message to Susan.";
+    function done(ok) { S.saved = ok ? "Shared. If nothing opened, copy the text below and send it to Susan." : "Copy the text below and send it to Susan."; render(); }
+    if (navigator.share) { navigator.share({ title: "Rising Sign Finder result", text: text }).then(function () { done(true); }).catch(function () { done(false); }); }
+    else if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(function () { S.saved = "Copied. Paste it into a message to Susan."; render(); }).catch(function () { done(false); }); }
+    else { done(false); }
+  }
+
+  /* ---------- Test log ---------- */
+  var KEY = "rsf_runs_v1";
+  function loadRows() { try { return JSON.parse(localStorage.getItem(KEY) || "[]"); } catch (e) { return []; } }
+  function saveRows(r) { try { localStorage.setItem(KEY, JSON.stringify(r)); } catch (e) {} }
+  function renderLogShell() {
+    var host = h("div", { id: "log-host" });
+    var ta = h("textarea", { rows: "5", "aria-label": "Paste results", placeholder: "Paste one or more tester messages here", style: "width:100%;font:13px ui-monospace,Menlo,monospace;padding:8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)" });
+    var info = h("p", { class: "small muted" });
+    var add = h("button", { class: "btn", type: "button", onclick: function () {
+      var found = ta.value.match(/RSF1:\{.*\}/g) || [], rows = loadRows(), n = 0;
+      found.forEach(function (f) { try { var d = JSON.parse(f.slice(5)); if (!rows.some(function (r) { return r.createdAt === d.createdAt && r.label === d.label && r.sun === d.sun; })) { rows.push(d); n++; } } catch (e) {} });
+      rows.sort(function (x, y) { return y.createdAt - x.createdAt; });
+      saveRows(rows); ta.value = ""; renderLogShell(); }
+    }, "Add to log");
+    app.replaceChildren(h("section", { class: "card" }, h("h2", { text: "Add tester results" }), ta, h("div", { class: "row" }, add), info), host);
+    info.textContent = "Stored in this browser only.";
+    host.replaceChildren(logView(loadRows()));
+  }
+  function logView(rows) {
+    if (!rows.length) {
+      return h("section", { class: "card empty" }, h("h2", { text: "Test log" }),
+        h("p", { text: "No runs saved yet. Take the quiz, pick your actual rising sign if you know it, and choose Save to test log. Each run adds a row here with its result and whether it matched." }));
+    }
+    function stat(v, l) { return h("div", {}, h("b", { text: v }), h("span", { class: "small muted", text: l })); }
+    function block(title, rs) {
+      var k = rs.filter(function (r) { return r.known; });
+      var t1 = k.filter(function (r) { return r.ranking && r.ranking[0] && r.ranking[0].sign === r.known; }).length;
+      var t2 = k.filter(function (r) { return (r.ranking || []).slice(0, 2).some(function (x) { return x.sign === r.known; }); }).length;
+      var ic = k.filter(function (r) { return (r.candidates || []).indexOf(r.known) >= 0; }).length;
+      function of(n) { return k.length ? n + " of " + k.length : "None yet"; }
+      return h("div", { style: "display:flex;flex-direction:column;gap:10px" }, h("h3", { text: title }),
+        h("div", { class: "stats" }, stat(String(rs.length), "runs saved"), stat(of(t1), "top match correct"), stat(of(t2), "in top two"), stat(of(ic), "in candidate list")));
+    }
+    var winRows = rows.filter(function (r) { return r.path === "window"; });
+    var noRows = rows.filter(function (r) { return r.path !== "window"; });
+    var body = rows.map(function (r) {
+      var top = r.ranking && r.ranking[0] ? r.ranking[0].sign : "";
+      var sec = r.ranking && r.ranking[1] ? r.ranking[1].sign : "";
+      var res = "", cls = "";
+      if (r.known) { if (top === r.known) { res = "Top match"; cls = "hit"; } else if (sec === r.known) { res = "Runner-up"; cls = "near"; } else { res = "Missed"; cls = "miss"; } }
+      return h("tr", {},
+        h("td", { text: new Date(r.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" }) }),
+        h("td", { text: r.label || "" }),
+        h("td", { text: r.sun || "" }),
+        h("td", { text: r.path === "window" ? "Time window" : (r.daypart ? "Day or night" : "No time") }),
+        h("td", { text: r.bank ? "v" + r.bank : "v1" }),
+        h("td", { text: (r.candidates || []).join(", ") }),
+        h("td", { text: top + (sec ? " / " + sec : "") }),
+        h("td", { text: r.confidence || "" }),
+        h("td", { text: r.known || "" }),
+        h("td", { class: cls, text: res }));
+    });
+    return h("section", { style: "display:flex;flex-direction:column;gap:20px" },
+      h("div", { class: "card" },
+        h("h2", { text: "Test log" }),
+        block("Time window", winRows),
+        block("No time, or day or night only", noRows),
+        h("p", { class: "small muted", text: "Scores count only runs where the tester entered a known rising sign. The candidate list shows how often the narrowing step kept the true sign. The two paths are scored separately because the no-time path has to choose among many more signs." })),
+      h("div", { class: "card" }, h("div", { class: "tablewrap" }, h("table", {},
+        h("thead", {}, h("tr", {}, ["Date", "Label", "Sun", "Path", "Ver", "Candidates", "Result", "Confidence", "Actual", "Outcome"].map(function (t) { return h("th", { text: t }); }))),
+        h("tbody", {}, body)))));
+  }
+
+  /* ---------- Routing ---------- */
+  var view = "quiz";
+  function setView(v) {
+    view = v;
+    document.getElementById("tab-quiz").setAttribute("aria-current", v === "quiz" ? "page" : "false");
+    document.getElementById("tab-log").setAttribute("aria-current", v === "log" ? "page" : "false");
+    if (logUnsub && v !== "log") { logUnsub(); logUnsub = null; }
+    render();
+  }
+  function render() {
+    if (view === "log") { renderLogShell(); return; }
+    var node = S.screen === "setup" ? renderSetup() : S.screen === "q" ? renderQuestion() : renderResult();
+    app.replaceChildren(node);
+    if (S.screen !== "setup") window.scrollTo({ top: 0 });
+  }
+  document.getElementById("tab-quiz").addEventListener("click", function () { setView("quiz"); });
+  document.getElementById("tab-log").addEventListener("click", function () { setView("log"); });
+
+  render();
+
+  if (location.hash === "#log") { document.getElementById("tab-log").hidden = false; setView("log"); }
+})();
+</script>
+
+</body></html>
